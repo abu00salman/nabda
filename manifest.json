@@ -1,0 +1,15 @@
+{
+  "name": "نبضة — لعبة الإيقاع",
+  "short_name": "نبضة",
+  "description": "التقط الضوء في اللحظة المناسبة",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0E141B",
+  "theme_color": "#0E141B",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
