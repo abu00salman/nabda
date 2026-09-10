@@ -33,10 +33,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- ═══ مكان كود الإعلانات (Google AdSense) ═══
-     الصق سطر التحميل هنا عند التفعيل، مثال:
-     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXX" crossorigin="anonymous"></script>
--->
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3681323239054519" crossorigin="anonymous"></script>
 
 <style>
   :root{
@@ -226,7 +224,7 @@
   </div>
 
   <!-- إعلان أسفل اللعبة: الصق وحدة AdSense داخل هذا العنصر -->
-  <div class="ad-slot" id="adBottom"></div>
+  <div class="ad-slot hidden" id="adBottom"></div>
 
   <footer>
     <span><b>نبضة</b> © 2026</span>
@@ -273,7 +271,7 @@
       <div><span class="k">أفضل نتيجة</span><span class="v" id="finalBest">0</span></div>
     </div>
     <!-- إعلان بين الجولات: الصق وحدة إعلانية هنا -->
-    <div class="ad-slot" id="adInterstitial" style="margin-top:14px"></div>
+    <div class="ad-slot hidden" id="adInterstitial" style="margin-top:14px"></div>
     <button class="btn primary" id="retryBtn">جولة جديدة</button>
     <button class="btn ghost" id="shareBtn">شارك نتيجتك</button>
   </div>
