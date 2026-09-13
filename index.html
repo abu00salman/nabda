@@ -6,8 +6,7 @@
 <title>نبضة — لعبة الإيقاع</title>
 <meta name="description" content="نبضة: التقط الضوء في اللحظة المناسبة. لعبة إيقاع وتركيز تعمل على الجوال والكمبيوتر.">
 
-<!-- ═══ معاينة المشاركة (واتساب، تويتر/X، تيليجرام، فيسبوك) ═══
-     غيّر nabda.app إلى رابط موقعك الفعلي إذا نشرته على نطاق آخر. الرابط يجب أن يكون كاملًا (https://...) -->
+<!-- ═══ معاينة المشاركة (واتساب، تويتر/X، تيليجرام، فيسبوك) ═══ -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="نبضة">
 <meta property="og:title" content="نبضة — التقط الضوء في اللحظة المناسبة">
@@ -24,12 +23,13 @@
 <meta name="twitter:title" content="نبضة — التقط الضوء في اللحظة المناسبة">
 <meta name="twitter:description" content="لعبة إيقاع وتركيز تعمل على الجوال والكمبيوتر.">
 <meta name="twitter:image" content="https://playnabda.com/og-image.jpg">
+
 <meta name="theme-color" content="#0E141B">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="نبضة">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230E141B'/%3E%3Ccircle cx='32' cy='32' r='16' fill='none' stroke='%23D6FF5A' stroke-width='6'/%3E%3Ccircle cx='32' cy='9' r='5' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="icon" href="icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -37,35 +37,44 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3681323239054519" crossorigin="anonymous"></script>
 
 <style>
+  /* ═══ الثيمات ═══ */
+  :root, [data-theme="lime"]{
+    --bg:#0E141B; --bg-glow:#18232F; --panel-a:#152029; --panel-b:#111922;
+    --line:#233040; --tick:#2C3A49; --tick-major:#4A5B6E; --ring:#243141;
+    --text:#EEF2F6; --muted:#8C99A8;
+    --accent:#D6FF5A; --accent-core:#F3FFC2; --accent-ink:#0E141B; --accent-rgb:214,255,90;
+    --heart:#FF7A8A; --dot:#EAF4FF; --danger-rgb:255,92,108;
+  }
+  [data-theme="ocean"]{
+    --bg:#0A1220; --bg-glow:#122036; --panel-a:#111D30; --panel-b:#0D1727;
+    --line:#1F3049; --tick:#25364F; --tick-major:#3E5677; --ring:#1E3048;
+    --text:#EAF3FF; --muted:#8AA0BF;
+    --accent:#4DE3FF; --accent-core:#D8F9FF; --accent-ink:#06131C; --accent-rgb:77,227,255;
+    --heart:#FF7AA8; --dot:#FFFFFF; --danger-rgb:255,92,140;
+  }
+  [data-theme="ember"]{
+    --bg:#160F0D; --bg-glow:#261815; --panel-a:#231715; --panel-b:#1B1210;
+    --line:#3A2622; --tick:#42302B; --tick-major:#6B4A42; --ring:#3B2925;
+    --text:#FFF3EC; --muted:#B39A90;
+    --accent:#FF9F43; --accent-core:#FFE3C4; --accent-ink:#1A0F0A; --accent-rgb:255,159,67;
+    --heart:#FF6B7A; --dot:#FFF7EE; --danger-rgb:255,92,108;
+  }
   :root{
-    --bg:#0E141B;        /* الخلفية العميقة */
-    --panel:#131C25;     /* البطاقة */
-    --line:#233040;      /* الحدود والحلقة */
-    --tick:#3A4A5C;      /* علامات الدائرة */
-    --text:#EEF2F6;
-    --muted:#8C99A8;
-    --lime:#D6FF5A;      /* الضوء / الهدف */
-    --lime-deep:#A9D12E;
-    --heart:#FF7A8A;
-    --dot:#EAF4FF;
-    --danger:#FF5C6C;
     --font:'IBM Plex Sans Arabic',-apple-system,'Segoe UI',Tahoma,Arial,sans-serif;
-    --radius-card:28px;
-    --safe-b:env(safe-area-inset-bottom,0px);
+    --radius-card:28px; --safe-b:env(safe-area-inset-bottom,0px);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
   body{
     margin:0;background:var(--bg);color:var(--text);font-family:var(--font);
     -webkit-font-smoothing:antialiased;overflow-x:hidden;touch-action:manipulation;
-    background-image:radial-gradient(900px 500px at 50% -10%,#18232F 0%,var(--bg) 60%);
-    user-select:none;-webkit-user-select:none;
+    background-image:radial-gradient(900px 500px at 50% -10%,var(--bg-glow) 0%,var(--bg) 60%);
+    user-select:none;-webkit-user-select:none;transition:background-color .3s;
   }
   .app{max-width:480px;margin:0 auto;padding:16px 16px calc(24px + var(--safe-b));min-height:100%;display:flex;flex-direction:column;gap:14px}
 
-  /* ── البطاقة ── */
   .card{
-    background:linear-gradient(180deg,#152029 0%,#111922 100%);
+    background:linear-gradient(180deg,var(--panel-a) 0%,var(--panel-b) 100%);
     border:1px solid var(--line);border-radius:var(--radius-card);
     padding:20px 18px 18px;position:relative;overflow:hidden;
     box-shadow:0 30px 60px -30px rgba(0,0,0,.7);
@@ -75,60 +84,51 @@
 
   .top{display:flex;justify-content:space-between;align-items:center}
   .status{display:flex;align-items:center;gap:8px;font-weight:600;font-size:16px}
-  .status i{width:9px;height:9px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime)}
+  .status i{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
   .status.paused i{background:var(--muted);box-shadow:none}
-  .pill{border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px;color:var(--text);background:rgba(255,255,255,.02)}
+  .pill{border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px;background:rgba(255,255,255,.02)}
 
   .stats{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;margin-top:22px}
   .stat{display:flex;flex-direction:column;gap:6px}
-  .stat.end{align-items:flex-start}      /* السلسلة على يسار الشاشة */
+  .stat.end{align-items:flex-start}
   .stat .label{font-size:14px;color:var(--muted)}
   .stat .value{font-size:40px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
-  .stat .value.lime{color:var(--lime);display:flex;align-items:center;gap:6px}
+  .stat .value.accent{color:var(--accent);display:flex;align-items:center;gap:6px}
   .stat .value .bolt{font-size:26px;filter:drop-shadow(0 0 6px rgba(255,200,60,.5))}
   .value.pop{animation:pop .3s ease}
   @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
-  .hearts{display:flex;gap:6px;padding:0 18px 14px;font-size:20px;letter-spacing:1px}
+  .hearts{display:flex;gap:6px;padding:0 18px 14px;font-size:20px}
   .hearts span{color:var(--heart);transition:transform .25s,opacity .25s}
-  .hearts span.lost{opacity:.85}
   .hearts span.drop{animation:drop .5s ease forwards}
   @keyframes drop{to{transform:translateY(10px) scale(.7);opacity:.3}}
 
-  /* ── الحلقة ── */
   .ring-wrap{position:relative;width:100%;aspect-ratio:1;margin:8px auto 0;max-width:340px}
   canvas{display:block;width:100%;height:100%}
   .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;pointer-events:none;text-align:center}
-  .center .hint{font-size:16px;color:var(--text);opacity:.85}
+  .center .hint{font-size:16px;opacity:.85}
   .center .hits{font-size:64px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
   .center .sub{font-size:15px;color:var(--muted)}
 
-  .feedback{min-height:28px;text-align:center;font-size:18px;color:var(--text);margin:8px 0 0;transition:color .2s}
-  .feedback.good{color:var(--lime)}
+  .feedback{min-height:28px;text-align:center;font-size:18px;margin:8px 0 0;transition:color .2s}
+  .feedback.good{color:var(--accent)}
   .feedback.bad{color:var(--heart)}
 
   .controls{display:flex;gap:12px;margin-top:22px;align-items:stretch}
   .tap{
-    flex:1;border:0;border-radius:22px;background:var(--lime);color:#0E141B;
+    flex:1;border:0;border-radius:22px;background:var(--accent);color:var(--accent-ink);
     font:700 22px/1 var(--font);padding:24px 16px;cursor:pointer;
-    box-shadow:0 10px 30px -8px rgba(214,255,90,.55);
+    box-shadow:0 10px 30px -8px rgba(var(--accent-rgb),.55);
     transition:transform .08s,filter .15s;display:flex;align-items:center;justify-content:center;gap:10px;
   }
   .tap:active{transform:scale(.97);filter:brightness(.92)}
   .tap .o{font-size:24px}
-  .pause{
-    width:72px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.02);
-    color:var(--text);font:600 20px var(--font);cursor:pointer;
-  }
+  .pause{width:72px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.02);color:var(--text);font:600 20px var(--font);cursor:pointer}
   .pause:active{background:rgba(255,255,255,.06)}
-  button:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
   .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin:18px 0 0}
 
-  /* ── الإعلانات ── */
-  .ad-slot{
-    min-height:60px;border:1px dashed var(--line);border-radius:14px;
-    display:flex;align-items:center;justify-content:center;color:#4A5868;font-size:12px;
-  }
+  .ad-slot{min-height:60px;border:1px dashed var(--line);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#4A5868;font-size:12px}
   .ad-slot:empty::before{content:'مساحة إعلان'}
   .ad-slot.hidden{display:none}
 
@@ -137,46 +137,68 @@
   footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid transparent}
   footer a:hover{color:var(--text);border-color:var(--muted)}
 
-  /* ── الطبقات ── */
-  .overlay{
-    position:fixed;inset:0;background:rgba(9,13,18,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-    display:none;align-items:center;justify-content:center;padding:20px;z-index:10;
-  }
+  /* ═══ الطبقات ═══ */
+  .overlay{position:fixed;inset:0;background:rgba(6,9,13,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:20px;z-index:10;overflow-y:auto}
   .overlay.show{display:flex}
-  .sheet{
-    width:100%;max-width:400px;background:var(--panel);border:1px solid var(--line);
-    border-radius:var(--radius-card);padding:28px 22px;text-align:center;animation:rise .35s cubic-bezier(.2,.8,.2,1)
-  }
+  .sheet{width:100%;max-width:400px;background:var(--panel-b);border:1px solid var(--line);border-radius:var(--radius-card);padding:28px 22px;text-align:center;animation:rise .35s cubic-bezier(.2,.8,.2,1);margin:auto}
   @keyframes rise{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
-  .sheet h1{margin:0 0 6px;font-size:34px;font-weight:700;letter-spacing:-.5px}
+  .sheet h1{margin:0 0 6px;font-size:34px;font-weight:700}
   .sheet h2{margin:0 0 8px;font-size:26px;font-weight:700}
   .sheet p{margin:0;color:var(--muted);font-size:15px;line-height:1.7}
   .logo{width:72px;height:72px;margin:0 auto 14px}
-  .big-score{font-size:72px;font-weight:700;line-height:1;margin:14px 0 4px;color:var(--lime);font-variant-numeric:tabular-nums}
+  .big-score{font-size:72px;font-weight:700;line-height:1;margin:14px 0 4px;color:var(--accent);font-variant-numeric:tabular-nums}
   .row{display:flex;justify-content:center;gap:24px;margin:18px 0 6px}
   .row div{display:flex;flex-direction:column;gap:2px}
   .row .k{font-size:13px;color:var(--muted)}
   .row .v{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
-  .best-badge{display:inline-block;margin-top:8px;padding:6px 14px;border-radius:999px;background:rgba(214,255,90,.12);color:var(--lime);font-size:14px;font-weight:600}
-  .rules{display:grid;gap:10px;margin:20px 0 6px;text-align:right}
-  .rules li{list-style:none;display:flex;gap:12px;align-items:center;color:var(--text);font-size:15px}
-  .rules li i{flex:none;width:34px;height:34px;border-radius:10px;background:rgba(214,255,90,.1);display:grid;place-items:center;font-style:normal}
-  .btn{margin-top:18px;width:100%;border:0;border-radius:18px;padding:18px;font:700 19px var(--font);cursor:pointer}
-  .btn.primary{background:var(--lime);color:#0E141B;box-shadow:0 10px 30px -8px rgba(214,255,90,.5)}
-  .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line);margin-top:10px;padding:14px;font-weight:500;font-size:16px}
+  .best-badge{display:inline-block;margin-top:8px;padding:6px 14px;border-radius:999px;background:rgba(var(--accent-rgb),.12);color:var(--accent);font-size:14px;font-weight:600}
+  .rules{display:grid;gap:10px;margin:20px 0 6px;padding:0;text-align:right}
+  .rules li{list-style:none;display:flex;gap:12px;align-items:center;font-size:15px}
+  .rules li i{flex:none;width:34px;height:34px;border-radius:10px;background:rgba(var(--accent-rgb),.1);display:grid;place-items:center;font-style:normal}
+  .btn{margin-top:18px;width:100%;border:0;border-radius:18px;padding:18px;font:700 19px var(--font);cursor:pointer;color:var(--text)}
+  .btn.primary{background:var(--accent);color:var(--accent-ink);box-shadow:0 10px 30px -8px rgba(var(--accent-rgb),.5)}
+  .btn.ghost{background:transparent;border:1px solid var(--line);margin-top:10px;padding:14px;font-weight:500;font-size:16px}
   .btn:active{transform:scale(.98)}
+  .btn-row{display:flex;gap:10px}
+  .btn-row .btn{margin-top:10px}
 
-  .toast{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);font-size:34px;font-weight:700;color:var(--lime);pointer-events:none;opacity:0}
+  .toast{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);font-size:34px;font-weight:700;color:var(--accent);pointer-events:none;opacity:0}
   .toast.go{animation:toast .7s ease forwards}
   @keyframes toast{0%{opacity:0;transform:translate(-50%,-30%) scale(.7)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}100%{opacity:0;transform:translate(-50%,-80%) scale(1)}}
 
-  @media (min-width:700px){
-    .app{padding-top:32px}
-    .card{padding:24px 24px 22px}
-  }
-  @media (prefers-reduced-motion:reduce){
-    .card.shake,.value.pop,.sheet,.toast.go{animation:none}
-  }
+  /* ═══ الثيمات: المحدد ═══ */
+  .themes{display:flex;justify-content:center;gap:10px;margin-top:16px}
+  .theme{width:44px;height:44px;border-radius:14px;border:2px solid var(--line);cursor:pointer;position:relative;padding:0;background:var(--sw-bg)}
+  .theme::after{content:'';position:absolute;inset:11px;border-radius:50%;border:4px solid var(--sw-accent);border-left-color:transparent}
+  .theme.active{border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.25)}
+  .theme-label{font-size:12px;color:var(--muted);margin-top:8px}
+
+  /* ═══ لوحة المتصدرين ═══ */
+  .board{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:6px;text-align:right}
+  .board li{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid transparent}
+  .board li.me{border-color:rgba(var(--accent-rgb),.5);background:rgba(var(--accent-rgb),.07)}
+  .board .rank{font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;text-align:center}
+  .board li:nth-child(1) .rank{color:#FFD24D}.board li:nth-child(2) .rank{color:#C9D3DD}.board li:nth-child(3) .rank{color:#D9A066}
+  .board .nick{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .board .nick small{color:var(--muted);font-weight:400;margin-right:6px}
+  .board .sc{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+  .board-note{margin-top:12px;font-size:13px;color:var(--muted)}
+  .nick-input{width:100%;margin-top:14px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font:600 18px var(--font);text-align:center;outline:none}
+  .nick-input:focus{border-color:var(--accent)}
+  .err{color:var(--heart);font-size:13px;margin-top:8px;min-height:18px}
+
+  /* ═══ شريط التحديث ═══ */
+  .update-bar{position:fixed;left:50%;bottom:calc(16px + var(--safe-b));transform:translate(-50%,120%);width:calc(100% - 32px);max-width:440px;background:var(--panel-a);border:1px solid var(--line);border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:12px;z-index:20;box-shadow:0 20px 40px -20px #000;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+  .update-bar.show{transform:translate(-50%,0)}
+  .update-bar p{margin:0;flex:1;font-size:14px;color:var(--text);line-height:1.5}
+  .update-bar p small{display:block;color:var(--muted)}
+  .update-bar button{border:0;border-radius:12px;padding:10px 14px;background:var(--accent);color:var(--accent-ink);font:700 14px var(--font);cursor:pointer;white-space:nowrap}
+  .whatsnew{list-style:none;padding:0;margin:14px 0 0;text-align:right;display:grid;gap:8px}
+  .whatsnew li{padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.03);font-size:15px}
+  .whatsnew li::before{content:'•';color:var(--accent);margin-left:8px}
+
+  @media (min-width:700px){.app{padding-top:32px}.card{padding:24px 24px 22px}}
+  @media (prefers-reduced-motion:reduce){.card.shake,.value.pop,.sheet,.toast.go{animation:none}}
 </style>
 </head>
 <body>
@@ -189,15 +211,9 @@
     </div>
 
     <div class="stats">
-      <div class="stat">
-        <span class="label">النتيجة</span>
-        <span class="value" id="score">0</span>
-      </div>
+      <div class="stat"><span class="label">النتيجة</span><span class="value" id="score">0</span></div>
       <div class="hearts" id="hearts" aria-label="الفرص المتبقية"><span>♥</span><span>♥</span><span>♥</span></div>
-      <div class="stat end">
-        <span class="label">السلسلة</span>
-        <span class="value lime" id="streakWrap"><span class="bolt">⚡</span><span id="streak">0</span></span>
-      </div>
+      <div class="stat end"><span class="label">السلسلة</span><span class="value accent" id="streakWrap"><span class="bolt">⚡</span><span id="streak">0</span></span></div>
     </div>
 
     <div class="ring-wrap">
@@ -217,17 +233,13 @@
       <button class="pause" id="pauseBtn" aria-label="إيقاف مؤقت">‖</button>
     </div>
 
-    <div class="meta">
-      <span>٣ فرص • بلا وقت محدد</span>
-      <span>إصابة أدق، نقاط أكثر</span>
-    </div>
+    <div class="meta"><span>٣ فرص • بلا وقت محدد</span><span>إصابة أدق، نقاط أكثر</span></div>
   </div>
 
-  <!-- إعلان أسفل اللعبة: الصق وحدة AdSense داخل هذا العنصر -->
   <div class="ad-slot hidden" id="adBottom"></div>
 
   <footer>
-    <span><b>نبضة</b> © 2026</span>
+    <span><b>نبضة</b> © 2026 · <span id="verLabel"></span></span>
     <span><a href="about.html">عن اللعبة</a> · <a href="privacy.html">الخصوصية</a></span>
   </footer>
 </div>
@@ -235,7 +247,7 @@
 <!-- شاشة البداية -->
 <div class="overlay show" id="startOverlay">
   <div class="sheet">
-    <svg class="logo" viewBox="0 0 64 64"><circle cx="32" cy="32" r="22" fill="none" stroke="#233040" stroke-width="5"/><path d="M32 10 A22 22 0 0 1 54 32" fill="none" stroke="#D6FF5A" stroke-width="7" stroke-linecap="round"/><circle cx="32" cy="10" r="5" fill="#EAF4FF"/></svg>
+    <svg class="logo" viewBox="0 0 64 64"><circle cx="32" cy="32" r="22" fill="none" stroke="var(--ring)" stroke-width="5"/><path d="M32 10 A22 22 0 0 1 54 32" fill="none" stroke="var(--accent)" stroke-width="7" stroke-linecap="round"/><circle cx="32" cy="10" r="5" fill="var(--dot)"/></svg>
     <h1>نبضة</h1>
     <p>التقط الضوء في اللحظة المناسبة</p>
     <ul class="rules">
@@ -244,6 +256,9 @@
       <li><i>♥</i><span>لديك ٣ فرص، وكل مستوى أسرع وأضيق</span></li>
     </ul>
     <button class="btn primary" id="startBtn">ابدأ الجولة</button>
+    <button class="btn ghost" id="boardBtn">🏆 المتصدرون</button>
+    <div class="themes" id="themes"></div>
+    <div class="theme-label">اختر شكل اللعبة</div>
     <p id="bestLine" style="margin-top:14px;font-size:14px"></p>
   </div>
 </div>
@@ -270,314 +285,395 @@
       <div><span class="k">أطول سلسلة</span><span class="v" id="finalStreak">0</span></div>
       <div><span class="k">أفضل نتيجة</span><span class="v" id="finalBest">0</span></div>
     </div>
-    <!-- إعلان بين الجولات: الصق وحدة إعلانية هنا -->
+    <p id="rankLine" class="board-note"></p>
     <div class="ad-slot hidden" id="adInterstitial" style="margin-top:14px"></div>
     <button class="btn primary" id="retryBtn">جولة جديدة</button>
-    <button class="btn ghost" id="shareBtn">شارك نتيجتك</button>
+    <div class="btn-row">
+      <button class="btn ghost" id="boardBtn2">🏆 المتصدرون</button>
+      <button class="btn ghost" id="shareBtn">شارك نتيجتك</button>
+    </div>
   </div>
 </div>
 
-<script>
-(() => {
-  'use strict';
+<!-- لوحة المتصدرين -->
+<div class="overlay" id="boardOverlay">
+  <div class="sheet">
+    <h2>🏆 المتصدرون</h2>
+    <p id="boardSub">أفضل 20 لاعبًا حول العالم</p>
+    <ol class="board" id="boardList"><li><span class="rank">…</span><span class="nick">جارٍ التحميل</span><span class="sc"></span></li></ol>
+    <p class="board-note" id="boardMe"></p>
+    <button class="btn ghost" id="nickBtn">تغيير اسمي المستعار</button>
+    <button class="btn primary" id="boardClose">إغلاق</button>
+  </div>
+</div>
 
-  /* ───────── الإعدادات ───────── */
-  const CFG = {
-    baseSpeed: 130,       // درجة/ثانية في المستوى الأول
-    speedStep: 14,        // زيادة السرعة لكل مستوى
-    maxSpeed: 340,
-    baseArc: 30,          // نصف عرض القوس بالدرجات
-    arcStep: 2.6,
-    minArc: 9,
-    hitsPerLevel: 5,
-    lives: 3,
-    missMargin: 22,       // بعد كم درجة من نهاية القوس يُحتسب التفويت
-    reverseFromLevel: 3,  // بدءًا من هذا المستوى قد يغيّر الضوء اتجاهه
-  };
+<!-- اختيار الاسم المستعار -->
+<div class="overlay" id="nickOverlay">
+  <div class="sheet">
+    <h2>اسمك المستعار</h2>
+    <p>يظهر في لوحة المتصدرين بدل اسمك الحقيقي. أحرف إنجليزية وأرقام و <b>_ . -</b> فقط، بلا فراغات، من ٣ إلى ١٤ حرفًا.</p>
+    <input class="nick-input" id="nickInput" maxlength="14" autocomplete="off" autocapitalize="off" spellcheck="false" dir="ltr" placeholder="e.g. night_saqr">
+    <div class="err" id="nickErr"></div>
+    <button class="btn primary" id="nickSave">حفظ</button>
+    <button class="btn ghost" id="nickCancel">لاحقًا</button>
+  </div>
+</div>
 
-  /* ───────── عناصر الواجهة ───────── */
-  const $ = id => document.getElementById(id);
-  const ui = {
-    card:$('card'), canvas:$('ring'), status:$('status'), statusText:$('statusText'),
-    level:$('levelPill'), score:$('score'), streak:$('streak'), streakWrap:$('streakWrap'),
-    hearts:$('hearts'), hits:$('hits'), hint:$('hint'), sub:$('sub'), feedback:$('feedback'),
-    tap:$('tapBtn'), pause:$('pauseBtn'), toast:$('toast'),
-    startOverlay:$('startOverlay'), pauseOverlay:$('pauseOverlay'), endOverlay:$('endOverlay'),
-    startBtn:$('startBtn'), resumeBtn:$('resumeBtn'), restartFromPause:$('restartFromPause'),
-    retryBtn:$('retryBtn'), shareBtn:$('shareBtn'), bestLine:$('bestLine'),
-    finalScore:$('finalScore'), finalLevel:$('finalLevel'), finalStreak:$('finalStreak'),
-    finalBest:$('finalBest'), bestBadge:$('bestBadge'),
-  };
-  const ctx = ui.canvas.getContext('2d');
+<!-- ما الجديد -->
+<div class="overlay" id="newsOverlay">
+  <div class="sheet">
+    <h2>✨ ما الجديد</h2>
+    <p id="newsVer"></p>
+    <ul class="whatsnew" id="newsList"></ul>
+    <button class="btn primary" id="newsClose">رائع</button>
+  </div>
+</div>
 
-  /* ───────── الحفظ المحلي ───────── */
-  const store = {
-    get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
-    set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} },
-  };
-  let best = parseInt(store.get('nabda_best') || '0', 10);
+<!-- شريط التحديث -->
+<div class="update-bar" id="updateBar">
+  <p>نسخة جديدة من نبضة جاهزة<small>حدّث الآن لتحصل على آخر التحسينات</small></p>
+  <button id="updateBtn">تحديث</button>
+</div>
 
-  /* ───────── الصوت والاهتزاز ───────── */
-  let audio = null;
-  function initAudio(){
-    if (audio) return;
-    try { audio = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){}
+<script type="module">
+/* ═══════════════════════════════════════════════════════════════
+   إعدادات النسخة وسجل التغييرات
+   عند كل تحديث: ارفع APP_VERSION، أضف بنودًا في CHANGELOG،
+   وغيّر رقم CACHE في sw.js لنفس الرقم.
+   ═══════════════════════════════════════════════════════════════ */
+const APP_VERSION = '1.1.0';
+const CHANGELOG = {
+  '1.1.0': [
+    'لوحة المتصدرين العالمية بأسماء مستعارة',
+    'ثلاثة أشكال للعبة: ليمون، محيط، جمر',
+    'إشعار تلقائي عند توفر تحديث جديد',
+  ],
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   لوحة المتصدرين — عنوان الـ Worker على Cloudflare
+   بعد نشر worker.js ضع رابطه هنا، مثال:
+   'https://api.playnabda.com'  أو  'https://nabda-board.<اسمك>.workers.dev'
+   إن تُرك فارغًا تعمل اللعبة بلوحة محلية على هذا الجهاز فقط.
+   ═══════════════════════════════════════════════════════════════ */
+const API_BASE = '';
+
+/* ───────── الإعدادات ───────── */
+const CFG = { baseSpeed:130, speedStep:14, maxSpeed:340, baseArc:30, arcStep:2.6, minArc:9, hitsPerLevel:5, lives:3, missMargin:22, reverseFromLevel:3 };
+const THEMES = [
+  { id:'lime',  name:'ليمون', bg:'#0E141B', accent:'#D6FF5A' },
+  { id:'ocean', name:'محيط',  bg:'#0A1220', accent:'#4DE3FF' },
+  { id:'ember', name:'جمر',   bg:'#160F0D', accent:'#FF9F43' },
+];
+
+const $ = id => document.getElementById(id);
+const ui = {};
+document.querySelectorAll('[id]').forEach(el => ui[el.id] = el);
+const ctx = ui.ring.getContext('2d');
+
+const store = {
+  get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} },
+};
+let best = parseInt(store.get('nabda_best') || '0', 10);
+
+/* ───────── الثيمات ───────── */
+function applyTheme(id){
+  document.documentElement.setAttribute('data-theme', id);
+  store.set('nabda_theme', id);
+  const t = THEMES.find(x => x.id === id);
+  document.querySelector('meta[name=theme-color]').setAttribute('content', t.bg);
+  ui.themes.querySelectorAll('.theme').forEach(b => b.classList.toggle('active', b.dataset.id === id));
+  readColors();
+}
+THEMES.forEach(t => {
+  const b = document.createElement('button');
+  b.className = 'theme'; b.dataset.id = t.id; b.title = t.name; b.setAttribute('aria-label', 'شكل ' + t.name);
+  b.style.setProperty('--sw-bg', t.bg); b.style.setProperty('--sw-accent', t.accent);
+  b.addEventListener('click', () => applyTheme(t.id));
+  ui.themes.appendChild(b);
+});
+let C = {};
+function readColors(){
+  const s = getComputedStyle(document.documentElement);
+  const g = n => s.getPropertyValue(n).trim();
+  C = { tick:g('--tick'), tickMajor:g('--tick-major'), ring:g('--ring'), accent:g('--accent'), accentCore:g('--accent-core'), accentRgb:g('--accent-rgb'), dot:g('--dot'), dangerRgb:g('--danger-rgb') };
+}
+applyTheme(store.get('nabda_theme') || 'lime');
+
+/* ───────── الصوت والاهتزاز ───────── */
+let audio = null;
+function initAudio(){ if (audio) return; try { audio = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
+function tone(freq, dur=.08, type='sine', vol=.15){
+  if (!audio) return; if (audio.state === 'suspended') audio.resume();
+  const o = audio.createOscillator(), g = audio.createGain();
+  o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(vol, audio.currentTime); g.gain.exponentialRampToValueAtTime(.001, audio.currentTime + dur);
+  o.connect(g).connect(audio.destination); o.start(); o.stop(audio.currentTime + dur);
+}
+const buzz = p => { try{ navigator.vibrate && navigator.vibrate(p); }catch(e){} };
+
+/* ───────── الحالة ───────── */
+const S = { running:false, paused:false, over:false, angle:-90, dir:1, speed:CFG.baseSpeed, target:90, arc:CFG.baseArc, passed:false,
+  score:0, streak:0, bestStreak:0, hits:0, level:1, lives:CFG.lives, trail:[], flash:0, flashColor:null, last:0, breathe:0 };
+const norm = a => ((a % 360) + 360) % 360;
+const diffAngle = (a,b) => { let d = norm(a - b); return d > 180 ? d - 360 : d; };
+const rad = d => d * Math.PI / 180;
+const rand = (a,b) => a + Math.random() * (b - a);
+
+function newTarget(){
+  if (S.level >= CFG.reverseFromLevel && Math.random() < .3) S.dir *= -1;
+  S.target = norm(S.angle + S.dir * rand(110, 240)); S.passed = false;
+}
+function applyLevel(){
+  S.speed = Math.min(CFG.maxSpeed, CFG.baseSpeed + (S.level - 1) * CFG.speedStep);
+  S.arc = Math.max(CFG.minArc, CFG.baseArc - (S.level - 1) * CFG.arcStep);
+  ui.levelPill.textContent = 'المستوى ' + S.level;
+}
+function reset(){
+  Object.assign(S, { angle:-90, dir:1, score:0, streak:0, bestStreak:0, hits:0, level:1, lives:CFG.lives, trail:[], flash:0, over:false, paused:false });
+  applyLevel(); newTarget();
+  ui.score.textContent = '0'; ui.streak.textContent = '0'; ui.hits.textContent = '0';
+  ui.hearts.querySelectorAll('span').forEach(h => { h.className=''; h.textContent='♥'; });
+  setFeedback('انتظر حتى يصل الضوء إلى الهدف');
+  ui.hint.textContent = 'ركّز على الضوء'; ui.sub.textContent = 'إيقاعك يصنع الفرق';
+  setStatus('الجولة جارية', false);
+}
+function setFeedback(t, cls){ ui.feedback.textContent = t; ui.feedback.className = 'feedback' + (cls ? ' ' + cls : ''); }
+function setStatus(t, paused){ ui.statusText.textContent = t; ui.status.classList.toggle('paused', !!paused); }
+function pop(el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+function toast(t){ ui.toast.textContent = t; ui.toast.classList.remove('go'); void ui.toast.offsetWidth; ui.toast.classList.add('go'); }
+
+function onTap(){
+  if (!S.running || S.paused || S.over) return;
+  const d = Math.abs(diffAngle(S.angle, S.target));
+  if (d <= S.arc) hit(d); else miss(d);
+}
+function hit(d){
+  const precision = 1 - d / S.arc, perfect = precision > .75;
+  S.streak++; S.bestStreak = Math.max(S.bestStreak, S.streak);
+  const mult = 1 + Math.min(S.streak, 10) * .1;
+  const pts = Math.round((10 + precision * 15) * mult) + (perfect ? 5 : 0);
+  S.score += pts; S.hits++; S.flash = 1; S.flashColor = 'ok';
+  ui.score.textContent = S.score; pop(ui.score); ui.streak.textContent = S.streak; pop(ui.streakWrap); ui.hits.textContent = S.hits;
+  if (perfect) { toast('مثالي +' + pts); setFeedback('إصابة مثالية!', 'good'); tone(880,.12,'triangle',.18); buzz(18); }
+  else { toast('+' + pts); setFeedback(precision > .4 ? 'إصابة جيدة' : 'أصبتها بالكاد، ركّز على المنتصف', 'good'); tone(660,.08,'triangle'); buzz(10); }
+  if (S.hits % CFG.hitsPerLevel === 0) {
+    S.level++; applyLevel();
+    ui.hint.textContent = 'أسرع وأضيق'; ui.sub.textContent = 'المستوى ' + S.level;
+    setTimeout(() => { ui.hint.textContent = 'ركّز على الضوء'; ui.sub.textContent = 'إيقاعك يصنع الفرق'; }, 1400);
+    tone(990,.14,'sine',.14); setTimeout(()=>tone(1320,.18,'sine',.14),120);
   }
-  function tone(freq, dur = .08, type = 'sine', vol = .15){
-    if (!audio) return;
-    if (audio.state === 'suspended') audio.resume();
-    const o = audio.createOscillator(), g = audio.createGain();
-    o.type = type; o.frequency.value = freq;
-    g.gain.setValueAtTime(vol, audio.currentTime);
-    g.gain.exponentialRampToValueAtTime(.001, audio.currentTime + dur);
-    o.connect(g).connect(audio.destination);
-    o.start(); o.stop(audio.currentTime + dur);
+  newTarget();
+}
+function miss(d){
+  S.streak = 0; S.lives--; S.flash = 1; S.flashColor = 'bad';
+  ui.streak.textContent = '0';
+  ui.card.classList.remove('shake'); void ui.card.offsetWidth; ui.card.classList.add('shake');
+  const h = ui.hearts.querySelectorAll('span')[S.lives]; if (h) { h.classList.add('drop'); h.textContent = '♡'; }
+  if (d !== null) setFeedback(d < S.arc + 25 ? 'قريبة! انتظر الضوء' : 'مبكر جدًا، انتظر حتى يصل الضوء', 'bad');
+  else setFeedback('فاتك الضوء، اضغط وهو فوق القوس', 'bad');
+  tone(180,.18,'sawtooth',.12); buzz([30,40,30]);
+  if (S.lives <= 0) return gameOver();
+  newTarget();
+}
+function gameOver(){
+  S.over = true; S.running = false; setStatus('انتهت الجولة', true);
+  const record = S.score > best;
+  if (record) { best = S.score; store.set('nabda_best', String(best)); }
+  ui.finalScore.textContent = S.score; ui.finalLevel.textContent = S.level; ui.finalStreak.textContent = S.bestStreak; ui.finalBest.textContent = best;
+  ui.bestBadge.style.display = record ? 'inline-block' : 'none';
+  ui.rankLine.textContent = '';
+  setTimeout(() => ui.endOverlay.classList.add('show'), 500);
+  if (S.score > 0) submitScore(S.score, S.level, S.bestStreak);
+}
+function start(){
+  initAudio(); reset();
+  ['startOverlay','endOverlay','pauseOverlay','boardOverlay'].forEach(k => ui[k].classList.remove('show'));
+  S.running = true; S.last = 0;
+}
+function pause(){ if (!S.running || S.over) return; S.paused = true; setStatus('الجولة متوقفة', true); ui.pauseOverlay.classList.add('show'); }
+function resume(){ S.paused = false; S.last = 0; setStatus('الجولة جارية', false); ui.pauseOverlay.classList.remove('show'); }
+
+ui.tapBtn.addEventListener('pointerdown', e => { e.preventDefault(); onTap(); });
+ui.ring.addEventListener('pointerdown', e => { e.preventDefault(); onTap(); });
+ui.pauseBtn.addEventListener('click', () => S.paused ? resume() : pause());
+ui.startBtn.addEventListener('click', start);
+ui.retryBtn.addEventListener('click', start);
+ui.restartFromPause.addEventListener('click', start);
+ui.resumeBtn.addEventListener('click', resume);
+ui.shareBtn.addEventListener('click', async () => {
+  const text = `سجّلت ${S.score} نقطة في نبضة (المستوى ${S.level}). هل تستطيع التفوّق عليّ؟`;
+  const url = location.origin + location.pathname;
+  try {
+    if (navigator.share) await navigator.share({ title:'نبضة', text, url });
+    else { await navigator.clipboard.writeText(text + ' ' + url); ui.shareBtn.textContent = 'تم النسخ'; setTimeout(()=>ui.shareBtn.textContent='شارك نتيجتك',1500); }
+  } catch(e){}
+});
+window.addEventListener('keydown', e => {
+  if (e.target === ui.nickInput) return;
+  const anyOverlay = [...document.querySelectorAll('.overlay.show')].length;
+  if (e.code === 'Space' || e.code === 'Enter') {
+    if (ui.startOverlay.classList.contains('show') || ui.endOverlay.classList.contains('show')) { e.preventDefault(); return start(); }
+    if (S.paused) { e.preventDefault(); return resume(); }
+    if (!anyOverlay) { e.preventDefault(); onTap(); }
   }
-  const buzz = p => { try{ navigator.vibrate && navigator.vibrate(p); }catch(e){} };
+  if (e.code === 'Escape' || e.key === 'p') S.paused ? resume() : pause();
+});
+document.addEventListener('visibilitychange', () => { if (document.hidden && S.running && !S.over) pause(); });
 
-  /* ───────── الحالة ───────── */
-  const S = {
-    running:false, paused:false, over:false,
-    angle:-90, dir:1, speed:CFG.baseSpeed,
-    target:90, arc:CFG.baseArc, passed:false,
-    score:0, streak:0, bestStreak:0, hits:0, level:1, lives:CFG.lives,
-    trail:[], flash:0, flashColor:null, last:0, breathe:0,
-  };
-
-  const norm = a => ((a % 360) + 360) % 360;
-  const diffAngle = (a,b) => { let d = norm(a - b); return d > 180 ? d - 360 : d; };
-  const rad = d => d * Math.PI / 180;
-  const rand = (a,b) => a + Math.random() * (b - a);
-
-  function newTarget(){
-    if (S.level >= CFG.reverseFromLevel && Math.random() < .3) S.dir *= -1;
-    S.target = norm(S.angle + S.dir * rand(110, 240));
-    S.passed = false;
+/* ───────── الرسم ───────── */
+let W=0,H=0,R=0,cx=0,cy=0;
+function resize(){
+  const dpr = Math.min(window.devicePixelRatio || 1, 3), rect = ui.ring.getBoundingClientRect();
+  W = rect.width; H = rect.height; ui.ring.width = W*dpr; ui.ring.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+  cx = W/2; cy = H/2; R = Math.min(W,H) * .40;
+}
+window.addEventListener('resize', resize); resize();
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  for (let i = 0; i < 60; i++) {
+    const a = rad(i*6 - 90), major = i % 5 === 0, r1 = R + (major?26:30), r2 = R + (major?40:36);
+    ctx.beginPath(); ctx.moveTo(cx+Math.cos(a)*r1, cy+Math.sin(a)*r1); ctx.lineTo(cx+Math.cos(a)*r2, cy+Math.sin(a)*r2);
+    ctx.strokeStyle = major ? C.tickMajor : C.tick; ctx.lineWidth = major ? 2 : 1.2; ctx.lineCap = 'round'; ctx.stroke();
   }
-
-  function applyLevel(){
-    S.speed = Math.min(CFG.maxSpeed, CFG.baseSpeed + (S.level - 1) * CFG.speedStep);
-    S.arc   = Math.max(CFG.minArc, CFG.baseArc - (S.level - 1) * CFG.arcStep);
-    ui.level.textContent = 'المستوى ' + S.level;
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.strokeStyle = C.ring; ctx.lineWidth = 5; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,cy,R*.78,0,Math.PI*2); ctx.strokeStyle = 'rgba(255,255,255,.05)'; ctx.lineWidth = 1; ctx.stroke();
+  const breathe = .85 + Math.sin(S.breathe) * .15;
+  ctx.save(); ctx.shadowColor = C.accent; ctx.shadowBlur = 28 * breathe;
+  ctx.beginPath(); ctx.arc(cx,cy,R,rad(S.target-S.arc),rad(S.target+S.arc)); ctx.strokeStyle = C.accent; ctx.lineWidth = 15; ctx.lineCap = 'round'; ctx.stroke(); ctx.restore();
+  ctx.beginPath(); ctx.arc(cx,cy,R,rad(S.target-S.arc*.25),rad(S.target+S.arc*.25)); ctx.strokeStyle = C.accentCore; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.stroke();
+  if (S.flash > 0) {
+    ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
+    ctx.strokeStyle = S.flashColor === 'ok' ? `rgba(${C.accentRgb},${S.flash*.7})` : `rgba(${C.dangerRgb},${S.flash*.8})`;
+    ctx.lineWidth = 5 + S.flash*8; ctx.stroke();
   }
-
-  function reset(){
-    Object.assign(S, { angle:-90, dir:1, score:0, streak:0, bestStreak:0, hits:0, level:1,
-      lives:CFG.lives, trail:[], flash:0, over:false, paused:false });
-    applyLevel(); newTarget();
-    ui.score.textContent = '0'; ui.streak.textContent = '0'; ui.hits.textContent = '0';
-    ui.hearts.querySelectorAll('span').forEach(h => { h.className=''; h.textContent='♥'; });
-    setFeedback('انتظر حتى يصل الضوء إلى الهدف');
-    ui.hint.textContent = 'ركّز على الضوء'; ui.sub.textContent = 'إيقاعك يصنع الفرق';
-    setStatus('الجولة جارية', false);
-  }
-
-  function setFeedback(t, cls){ ui.feedback.textContent = t; ui.feedback.className = 'feedback' + (cls ? ' ' + cls : ''); }
-  function setStatus(t, paused){ ui.statusText.textContent = t; ui.status.classList.toggle('paused', !!paused); }
-  function pop(el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
-  function toast(t){ ui.toast.textContent = t; ui.toast.classList.remove('go'); void ui.toast.offsetWidth; ui.toast.classList.add('go'); }
-
-  /* ───────── الإدخال ───────── */
-  function onTap(){
-    if (!S.running || S.paused || S.over) return;
-    const d = Math.abs(diffAngle(S.angle, S.target));
-    if (d <= S.arc) hit(d); else miss(d);
-  }
-
-  function hit(d){
-    const precision = 1 - d / S.arc;          // 0..1
-    const perfect = precision > .75;
-    S.streak++; S.bestStreak = Math.max(S.bestStreak, S.streak);
-    const mult = 1 + Math.min(S.streak, 10) * .1;
-    const pts = Math.round((10 + precision * 15) * mult) + (perfect ? 5 : 0);
-    S.score += pts; S.hits++;
-    S.flash = 1; S.flashColor = 'lime';
-    ui.score.textContent = S.score; pop(ui.score);
-    ui.streak.textContent = S.streak; pop(ui.streakWrap);
-    ui.hits.textContent = S.hits;
-    if (perfect) { toast('مثالي +' + pts); setFeedback('إصابة مثالية!', 'good'); tone(880,.12,'triangle',.18); buzz(18); }
-    else { toast('+' + pts); setFeedback(precision > .4 ? 'إصابة جيدة' : 'أصبتها بالكاد، ركّز على المنتصف', 'good'); tone(660,.08,'triangle'); buzz(10); }
-    if (S.hits % CFG.hitsPerLevel === 0) {
-      S.level++; applyLevel();
-      ui.hint.textContent = 'أسرع وأضيق'; ui.sub.textContent = 'المستوى ' + S.level;
-      setTimeout(() => { ui.hint.textContent = 'ركّز على الضوء'; ui.sub.textContent = 'إيقاعك يصنع الفرق'; }, 1400);
-      tone(990,.14,'sine',.14); setTimeout(()=>tone(1320,.18,'sine',.14),120);
-    }
-    newTarget();
-  }
-
-  function miss(d){
-    S.streak = 0; S.lives--;
-    S.flash = 1; S.flashColor = 'red';
-    ui.streak.textContent = '0';
-    ui.card.classList.remove('shake'); void ui.card.offsetWidth; ui.card.classList.add('shake');
-    const h = ui.hearts.querySelectorAll('span')[S.lives];
-    if (h) { h.classList.add('drop'); h.textContent = '♡'; }
-    if (d !== null) setFeedback(d < S.arc + 25 ? 'قريبة! انتظر الضوء' : 'مبكر جدًا، انتظر حتى يصل الضوء', 'bad');
-    else setFeedback('فاتك الضوء، اضغط وهو فوق القوس', 'bad');
-    tone(180,.18,'sawtooth',.12); buzz([30,40,30]);
-    if (S.lives <= 0) return gameOver();
-    newTarget();
-  }
-
-  function gameOver(){
-    S.over = true; S.running = false;
-    setStatus('انتهت الجولة', true);
-    const record = S.score > best;
-    if (record) { best = S.score; store.set('nabda_best', String(best)); }
-    ui.finalScore.textContent = S.score;
-    ui.finalLevel.textContent = S.level;
-    ui.finalStreak.textContent = S.bestStreak;
-    ui.finalBest.textContent = best;
-    ui.bestBadge.style.display = record ? 'inline-block' : 'none';
-    setTimeout(() => ui.endOverlay.classList.add('show'), 500);
-  }
-
-  function start(){
-    initAudio(); reset();
-    ui.startOverlay.classList.remove('show');
-    ui.endOverlay.classList.remove('show');
-    ui.pauseOverlay.classList.remove('show');
-    S.running = true; S.last = 0;
-  }
-  function pause(){
-    if (!S.running || S.over) return;
-    S.paused = true; setStatus('الجولة متوقفة', true);
-    ui.pauseOverlay.classList.add('show');
-  }
-  function resume(){
-    S.paused = false; S.last = 0; setStatus('الجولة جارية', false);
-    ui.pauseOverlay.classList.remove('show');
-  }
-
-  ui.tap.addEventListener('pointerdown', e => { e.preventDefault(); onTap(); });
-  ui.canvas.addEventListener('pointerdown', e => { e.preventDefault(); onTap(); });
-  ui.pause.addEventListener('click', () => S.paused ? resume() : pause());
-  ui.startBtn.addEventListener('click', start);
-  ui.retryBtn.addEventListener('click', start);
-  ui.restartFromPause.addEventListener('click', start);
-  ui.resumeBtn.addEventListener('click', resume);
-  ui.shareBtn.addEventListener('click', async () => {
-    const text = `سجّلت ${S.score} نقطة في نبضة (المستوى ${S.level}). هل تستطيع التفوّق عليّ؟`;
-    const url = location.href.split('?')[0];
-    try {
-      if (navigator.share) await navigator.share({ title:'نبضة', text, url });
-      else { await navigator.clipboard.writeText(text + ' ' + url); ui.shareBtn.textContent = 'تم النسخ'; setTimeout(()=>ui.shareBtn.textContent='شارك نتيجتك',1500); }
-    } catch(e){}
-  });
-  window.addEventListener('keydown', e => {
-    if (e.code === 'Space' || e.code === 'Enter') {
-      if (ui.startOverlay.classList.contains('show') || ui.endOverlay.classList.contains('show')) { e.preventDefault(); return start(); }
-      if (S.paused) { e.preventDefault(); return resume(); }
-      e.preventDefault(); onTap();
-    }
-    if (e.code === 'Escape' || e.key === 'p') S.paused ? resume() : pause();
-  });
-  document.addEventListener('visibilitychange', () => { if (document.hidden && S.running && !S.over) pause(); });
-
-  /* ───────── الرسم ───────── */
-  let W = 0, H = 0, R = 0, cx = 0, cy = 0;
-  function resize(){
-    const dpr = Math.min(window.devicePixelRatio || 1, 3);
-    const rect = ui.canvas.getBoundingClientRect();
-    W = rect.width; H = rect.height;
-    ui.canvas.width = W * dpr; ui.canvas.height = H * dpr;
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    cx = W/2; cy = H/2; R = Math.min(W,H) * .40;
-  }
-  window.addEventListener('resize', resize); resize();
-
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-
-    // علامات الساعة
-    for (let i = 0; i < 60; i++) {
-      const a = rad(i * 6 - 90), major = i % 5 === 0;
-      const r1 = R + (major ? 26 : 30), r2 = R + (major ? 40 : 36);
-      ctx.beginPath();
-      ctx.moveTo(cx + Math.cos(a)*r1, cy + Math.sin(a)*r1);
-      ctx.lineTo(cx + Math.cos(a)*r2, cy + Math.sin(a)*r2);
-      ctx.strokeStyle = major ? '#4A5B6E' : '#2C3A49'; ctx.lineWidth = major ? 2 : 1.2; ctx.lineCap = 'round';
-      ctx.stroke();
-    }
-
-    // الحلقة الأساسية
-    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI*2);
-    ctx.strokeStyle = '#243141'; ctx.lineWidth = 5; ctx.stroke();
-
-    // الدائرة الداخلية
-    ctx.beginPath(); ctx.arc(cx, cy, R * .78, 0, Math.PI*2);
-    ctx.strokeStyle = 'rgba(255,255,255,.05)'; ctx.lineWidth = 1; ctx.stroke();
-
-    // القوس المضيء (الهدف)
-    const t0 = rad(S.target - S.arc), t1 = rad(S.target + S.arc);
-    const breathe = .85 + Math.sin(S.breathe) * .15;
-    ctx.save();
-    ctx.shadowColor = '#D6FF5A'; ctx.shadowBlur = 28 * breathe;
-    ctx.beginPath(); ctx.arc(cx, cy, R, t0, t1);
-    ctx.strokeStyle = '#D6FF5A'; ctx.lineWidth = 15; ctx.lineCap = 'round'; ctx.stroke();
-    ctx.restore();
-    // نواة القوس (الإصابة المثالية)
-    ctx.beginPath(); ctx.arc(cx, cy, R, rad(S.target - S.arc*.25), rad(S.target + S.arc*.25));
-    ctx.strokeStyle = '#F3FFC2'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.stroke();
-
-    // وميض الإصابة/التفويت
-    if (S.flash > 0) {
-      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI*2);
-      ctx.strokeStyle = S.flashColor === 'lime' ? `rgba(214,255,90,${S.flash*.7})` : `rgba(255,92,108,${S.flash*.8})`;
-      ctx.lineWidth = 5 + S.flash * 8; ctx.stroke();
-    }
-
-    // الذيل
-    S.trail.forEach((p, i) => {
-      const k = (i + 1) / S.trail.length;
-      const a = rad(p);
-      ctx.beginPath(); ctx.arc(cx + Math.cos(a)*R, cy + Math.sin(a)*R, 5 + k*6, 0, Math.PI*2);
-      ctx.fillStyle = `rgba(234,244,255,${k * .28})`; ctx.fill();
-    });
-
-    // النقطة
-    const a = rad(S.angle);
-    const px = cx + Math.cos(a)*R, py = cy + Math.sin(a)*R;
-    ctx.save();
-    ctx.shadowColor = '#EAF4FF'; ctx.shadowBlur = 18;
-    ctx.beginPath(); ctx.arc(px, py, 12, 0, Math.PI*2); ctx.fillStyle = '#EAF4FF'; ctx.fill();
-    ctx.restore();
-    ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI*2); ctx.fillStyle = '#fff'; ctx.fill();
-  }
-
-  /* ───────── الحلقة الزمنية ───────── */
-  function loop(ts){
-    requestAnimationFrame(loop);
-    if (!S.last) S.last = ts;
-    let dt = Math.min((ts - S.last) / 1000, .05); S.last = ts;
-    S.breathe += dt * 4;
-    if (S.flash > 0) S.flash = Math.max(0, S.flash - dt * 3);
-
-    if (S.running && !S.paused && !S.over) {
-      const prev = S.angle;
-      S.angle = norm(S.angle + S.dir * S.speed * dt);
-      S.trail.push(prev); if (S.trail.length > 9) S.trail.shift();
-
-      // احتساب التفويت عند مرور الضوء بعد القوس
-      const rel = diffAngle(S.angle, S.target) * S.dir;   // موجب = تجاوز الهدف
-      if (rel > S.arc + CFG.missMargin && rel < 120 && !S.passed) { S.passed = true; miss(null); }
-    } else {
-      S.trail = [];
-    }
-    draw();
-  }
+  S.trail.forEach((p,i) => { const k=(i+1)/S.trail.length, a=rad(p); ctx.beginPath(); ctx.arc(cx+Math.cos(a)*R, cy+Math.sin(a)*R, 5+k*6, 0, Math.PI*2); ctx.fillStyle = `rgba(234,244,255,${k*.28})`; ctx.fill(); });
+  const a = rad(S.angle), px = cx+Math.cos(a)*R, py = cy+Math.sin(a)*R;
+  ctx.save(); ctx.shadowColor = C.dot; ctx.shadowBlur = 18; ctx.beginPath(); ctx.arc(px,py,12,0,Math.PI*2); ctx.fillStyle = C.dot; ctx.fill(); ctx.restore();
+  ctx.beginPath(); ctx.arc(px,py,5,0,Math.PI*2); ctx.fillStyle = '#fff'; ctx.fill();
+}
+function loop(ts){
   requestAnimationFrame(loop);
+  if (!S.last) S.last = ts;
+  let dt = Math.min((ts - S.last)/1000, .05); S.last = ts;
+  S.breathe += dt*4; if (S.flash > 0) S.flash = Math.max(0, S.flash - dt*3);
+  if (S.running && !S.paused && !S.over) {
+    const prev = S.angle; S.angle = norm(S.angle + S.dir*S.speed*dt);
+    S.trail.push(prev); if (S.trail.length > 9) S.trail.shift();
+    const rel = diffAngle(S.angle, S.target) * S.dir;
+    if (rel > S.arc + CFG.missMargin && rel < 120 && !S.passed) { S.passed = true; miss(null); }
+  } else S.trail = [];
+  draw();
+}
+requestAnimationFrame(loop);
 
-  /* ───────── البداية ───────── */
-  ui.bestLine.textContent = best ? 'أفضل نتيجة لك: ' + best : 'لم تلعب بعد، جرّب جولتك الأولى';
-  reset();
+/* ═══════════════════════════════════════════════════════════════
+   لوحة المتصدرين
+   ═══════════════════════════════════════════════════════════════ */
+let deviceId = store.get('nabda_id');
+if (!deviceId) { deviceId = 'p_' + (crypto.randomUUID ? crypto.randomUUID().replace(/-/g,'').slice(0,20) : Math.random().toString(36).slice(2,14) + Date.now().toString(36)); store.set('nabda_id', deviceId); }
+let nick = store.get('nabda_nick') || '';
+const NICK_RE = /^[a-zA-Z0-9_.\-]{3,14}$/;
+const BAD = ['admin','مدير','nabda','نبضة'];
+function validNick(n){ n = n.trim(); if (/\s/.test(n)) return 'لا يمكن وضع فراغ، استخدم _ بدلًا منه'; if (!NICK_RE.test(n)) return 'أحرف إنجليزية وأرقام و _ . - فقط، من ٣ إلى ١٤ حرفًا'; if (BAD.some(b => n.toLowerCase().includes(b))) return 'هذا الاسم محجوز'; return ''; }
+function randomNick(){ const a = ['Saqr','Nimr','Barq','Qamar','Najm','Raad','Sahm','Mawj','Fajr','Reeh']; return a[Math.floor(Math.random()*a.length)] + '_' + Math.floor(1000 + Math.random()*9000); }
 
-  // Service Worker للعمل بدون إنترنت (يفعّل فقط على https أو localhost)
-  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
-  }
-})();
+const online = !!API_BASE;
+const api = async (path, opts) => {
+  const r = await fetch(API_BASE + path, { ...opts, headers: { 'Content-Type': 'application/json' } });
+  if (!r.ok) throw new Error('api ' + r.status); return r.json();
+};
+
+// لوحة محلية احتياطية (تعمل بدون خادم)
+function localBoard(){ try { return JSON.parse(store.get('nabda_board') || '[]'); } catch(e){ return []; } }
+function localSave(entry){
+  const b = localBoard().filter(x => x.id !== entry.id); b.push(entry);
+  b.sort((a,z) => z.score - a.score); store.set('nabda_board', JSON.stringify(b.slice(0,50)));
+}
+
+let pendingScore = null;
+async function submitScore(score, level, streak){
+  if (!nick) { pendingScore = { score, level, streak }; openNick(true); return; }
+  const entry = { id: deviceId, nick, score, level, streak, t: Date.now() };
+  try {
+    let rank = null;
+    if (online) { const r = await api('/score', { method:'POST', body: JSON.stringify(entry) }); rank = r.rank; }
+    else { localSave(entry); rank = localBoard().findIndex(x => x.id === deviceId) + 1 || null; }
+    if (rank) ui.rankLine.textContent = rank <= 20 ? `ترتيبك العالمي: #${rank} 🏆` : `ترتيبك: #${rank} — تابع، القمة قريبة`;
+  } catch(e) { console.warn('leaderboard', e); }
+}
+async function fetchTop(){ return online ? api('/top') : localBoard().slice(0,20); }
+async function myRank(score){
+  if (online) { const r = await api('/rank?score=' + score); return r.rank; }
+  return localBoard().findIndex(x => x.id === deviceId) + 1 || null;
+}
+async function openBoard(){
+  ui.boardOverlay.classList.add('show');
+  ui.boardSub.textContent = online ? 'أفضل 20 لاعبًا حول العالم' : 'أفضل النتائج على هذا الجهاز';
+  ui.boardList.innerHTML = '<li><span class="rank">…</span><span class="nick">جارٍ التحميل</span><span class="sc"></span></li>';
+  ui.boardMe.textContent = nick ? `اسمك المستعار: ${nick}` : 'لم تختر اسمًا مستعارًا بعد';
+  try {
+    const rows = await fetchTop();
+    ui.boardList.innerHTML = rows.length ? rows.map((r,i) =>
+      `<li class="${r.id===deviceId?'me':''}"><span class="rank">${i+1}</span><span class="nick">${esc(r.nick||'لاعب')}<small>م${r.level||1}</small></span><span class="sc">${r.score}</span></li>`).join('')
+      : '<li><span class="rank">—</span><span class="nick">لا نتائج بعد، كن الأول!</span><span class="sc"></span></li>';
+    if (best > 0 && nick) { const rk = await myRank(best); if (rk) ui.boardMe.textContent = `${nick} — ترتيبك #${rk} بأفضل نتيجة ${best}`; }
+  } catch(e) { ui.boardList.innerHTML = '<li><span class="rank">!</span><span class="nick">تعذّر تحميل اللوحة، تحقق من الاتصال</span><span class="sc"></span></li>'; }
+}
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function openNick(fromScore){
+  ui.nickInput.value = nick || randomNick(); ui.nickErr.textContent = '';
+  ui.nickCancel.textContent = fromScore ? 'لاحقًا' : 'إلغاء';
+  ui.nickOverlay.classList.add('show'); setTimeout(() => { ui.nickInput.focus(); ui.nickInput.select(); }, 50);
+}
+ui.nickSave.addEventListener('click', async () => {
+  const v = ui.nickInput.value.trim(), err = validNick(v);
+  if (err) { ui.nickErr.textContent = err; return; }
+  nick = v; store.set('nabda_nick', nick); ui.nickOverlay.classList.remove('show');
+  if (pendingScore) { const p = pendingScore; pendingScore = null; await submitScore(p.score, p.level, p.streak); }
+  else if (best > 0) submitScore(best, 1, 0);
+  if (ui.boardOverlay.classList.contains('show')) openBoard();
+});
+ui.nickInput.addEventListener('keydown', e => { if (e.key === 'Enter') ui.nickSave.click(); });
+ui.nickInput.addEventListener('input', () => { const v = ui.nickInput.value, c = v.replace(/[^a-zA-Z0-9_.\-]/g,''); if (c !== v) { ui.nickInput.value = c; ui.nickErr.textContent = /\s/.test(v) ? 'الفراغ غير مسموح' : 'أحرف إنجليزية وأرقام ورموز _ . - فقط'; } else ui.nickErr.textContent = ''; });
+ui.nickCancel.addEventListener('click', () => { ui.nickOverlay.classList.remove('show'); pendingScore = null; });
+ui.nickBtn.addEventListener('click', () => openNick(false));
+ui.boardBtn.addEventListener('click', openBoard);
+ui.boardBtn2.addEventListener('click', openBoard);
+ui.boardClose.addEventListener('click', () => ui.boardOverlay.classList.remove('show'));
+
+/* ═══════════════════════════════════════════════════════════════
+   التحديثات: "ما الجديد" + شريط التحديث
+   ═══════════════════════════════════════════════════════════════ */
+ui.verLabel.textContent = 'v' + APP_VERSION;
+const seen = store.get('nabda_ver');
+if (seen && seen !== APP_VERSION && CHANGELOG[APP_VERSION]) {
+  ui.newsVer.textContent = 'الإصدار ' + APP_VERSION;
+  ui.newsList.innerHTML = CHANGELOG[APP_VERSION].map(x => `<li>${x}</li>`).join('');
+  ui.newsOverlay.classList.add('show');
+}
+store.set('nabda_ver', APP_VERSION);
+ui.newsClose.addEventListener('click', () => ui.newsOverlay.classList.remove('show'));
+
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    const showBar = w => { ui.updateBar.classList.add('show'); ui.updateBtn.onclick = () => { w.postMessage('SKIP_WAITING'); ui.updateBtn.textContent = 'جارٍ التحديث…'; }; };
+    if (reg.waiting) showBar(reg.waiting);
+    reg.addEventListener('updatefound', () => {
+      const w = reg.installing;
+      w && w.addEventListener('statechange', () => { if (w.state === 'installed' && navigator.serviceWorker.controller) showBar(w); });
+    });
+    setInterval(() => reg.update().catch(()=>{}), 60*60*1000);
+  }).catch(()=>{});
+  let reloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (reloading) return; reloading = true; location.reload(); });
+}
+
+/* ───────── البداية ───────── */
+ui.bestLine.textContent = best ? 'أفضل نتيجة لك: ' + best : 'لم تلعب بعد، جرّب جولتك الأولى';
+reset();
+window.__nabdaDebug = { S };
 </script>
 </body>
 </html>
