@@ -1,0 +1,10 @@
+# إعداد النشر التلقائي لـ Cloudflare Worker من GitHub
+name = "nabda"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+# ربط مخزن KV (نفس الربط الذي أضفته يدويًا)
+[[kv_namespaces]]
+binding = "BOARD"
+id = "c8cc74cff3284e419183825c121d59bb"
