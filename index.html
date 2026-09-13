@@ -341,8 +341,9 @@
    عند كل تحديث: ارفع APP_VERSION، أضف بنودًا في CHANGELOG،
    وغيّر رقم CACHE في sw.js لنفس الرقم.
    ═══════════════════════════════════════════════════════════════ */
-const APP_VERSION = '1.1.1';
+const APP_VERSION = '1.1.2';
 const CHANGELOG = {
+  '1.1.2': ['رسائل واضحة عند تعذّر إرسال النتيجة'],
   '1.1.1': ['إصلاح إرسال النتائج إلى لوحة المتصدرين'],
   '1.1.0': [
     'لوحة المتصدرين العالمية بأسماء مستعارة',
@@ -583,8 +584,12 @@ function randomNick(){ const a = ['Saqr','Nimr','Barq','Qamar','Najm','Raad','Sa
 const online = !!API_BASE;
 const api = async (path, opts) => {
   const r = await fetch(API_BASE + path, { ...opts, headers: { 'Content-Type': 'application/json' } });
-  if (!r.ok) throw new Error('api ' + r.status); return r.json();
+  let data = null; try { data = await r.json(); } catch(e){}
+  if (!r.ok) throw new Error((data && data.error) || ('http ' + r.status));
+  return data;
 };
+const ERR_AR = { 'bad nick':'الاسم المستعار غير مقبول', 'bad score':'النتيجة غير مقبولة', 'implausible':'النتيجة أعلى من المسموح لهذا المستوى', 'slow down':'انتظر ثوانٍ ثم أعد المحاولة', 'forbidden':'الطلب مرفوض من غير موقع اللعبة', 'bad id':'معرّف الجهاز غير صالح' };
+const errAr = e => ERR_AR[e.message] || ('خطأ: ' + e.message);
 
 // لوحة محلية احتياطية (تعمل بدون خادم)
 function localBoard(){ try { return JSON.parse(store.get('nabda_board') || '[]'); } catch(e){ return []; } }
@@ -601,8 +606,10 @@ async function submitScore(score, level, streak){
     let rank = null;
     if (online) { const r = await api('/score', { method:'POST', body: JSON.stringify(entry) }); rank = r.rank; }
     else { localSave(entry); rank = localBoard().findIndex(x => x.id === deviceId) + 1 || null; }
-    if (rank) ui.rankLine.textContent = !online ? `ترتيبك على هذا الجهاز: #${rank}` : rank <= 20 ? `ترتيبك العالمي: #${rank} 🏆` : `ترتيبك: #${rank} — تابع، القمة قريبة`;
-  } catch(e) { console.warn('leaderboard', e); ui.rankLine.textContent = 'تعذّر إرسال النتيجة، ستُرسل في الجولة القادمة'; }
+    const msg = rank ? (!online ? `ترتيبك على هذا الجهاز: #${rank}` : rank <= 20 ? `ترتيبك العالمي: #${rank} 🏆` : `ترتيبك: #${rank} — تابع، القمة قريبة`) : 'تم إرسال نتيجتك';
+    ui.rankLine.textContent = msg; ui.boardMe.textContent = `${nick} — ${msg}`;
+    return true;
+  } catch(e) { console.warn('leaderboard', e); const m = 'تعذّر إرسال النتيجة: ' + errAr(e); ui.rankLine.textContent = m; ui.boardMe.textContent = m; return false; }
 }
 async function fetchTop(){ return online ? api('/top') : localBoard().slice(0,20); }
 async function myRank(score){
@@ -632,9 +639,10 @@ ui.nickSave.addEventListener('click', async () => {
   const v = ui.nickInput.value.trim(), err = validNick(v);
   if (err) { ui.nickErr.textContent = err; return; }
   nick = v; store.set('nabda_nick', nick); ui.nickOverlay.classList.remove('show');
-  if (pendingScore) { const p = pendingScore; pendingScore = null; await submitScore(Math.max(p.score, best), Math.max(p.level, Math.ceil(best / 300)), p.streak); }
-  else if (best > 0) { let m = { level:1, streak:0 }; try { m = JSON.parse(store.get('nabda_best_meta')) || m; } catch(e){} submitScore(best, Math.max(m.level, Math.ceil(best / 300)), m.streak); }
-  if (ui.boardOverlay.classList.contains('show')) openBoard();
+  let sent = null;
+  if (pendingScore) { const p = pendingScore; pendingScore = null; sent = await submitScore(Math.max(p.score, best), Math.max(p.level, Math.ceil(best / 300)), p.streak); }
+  else if (best > 0) { let m = { level:1, streak:0 }; try { m = JSON.parse(store.get('nabda_best_meta')) || m; } catch(e){} sent = await submitScore(best, Math.max(m.level, Math.ceil(best / 300)), m.streak); }
+  if (ui.boardOverlay.classList.contains('show')) { const keep = ui.boardMe.textContent; await openBoard(); if (sent !== null) ui.boardMe.textContent = keep; }
 });
 ui.nickInput.addEventListener('keydown', e => { if (e.key === 'Enter') ui.nickSave.click(); });
 ui.nickInput.addEventListener('input', () => { const v = ui.nickInput.value, c = v.replace(/[^a-zA-Z0-9_.\-]/g,''); if (c !== v) { ui.nickInput.value = c; ui.nickErr.textContent = /\s/.test(v) ? 'الفراغ غير مسموح' : 'أحرف إنجليزية وأرقام ورموز _ . - فقط'; } else ui.nickErr.textContent = ''; });
