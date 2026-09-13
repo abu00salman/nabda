@@ -33,6 +33,12 @@ export default {
       return json(b.slice(0, TOP).map(({ id, nick, score, level }) => ({ id, nick, score, level })));
     }
 
+    if (req.method === 'GET' && url.pathname === '/check') {
+      const n = (url.searchParams.get('nick') || '').toLowerCase(), me = url.searchParams.get('id') || '';
+      const b = await board();
+      return json({ taken: b.some(x => x.id !== me && x.nick.toLowerCase() === n) });
+    }
+
     if (req.method === 'GET' && url.pathname === '/rank') {
       const score = parseInt(url.searchParams.get('score') || '0', 10);
       const b = await board();
@@ -61,6 +67,9 @@ export default {
 
       let b = await board();
       const i = b.findIndex(x => x.id === id);
+      // منع تكرار الاسم المستعار (بدون تمييز حالة الأحرف) لأي جهاز آخر
+      const taken = b.some(x => x.id !== id && x.nick.toLowerCase() === nick.toLowerCase());
+      if (taken) return json({ error: 'nick taken' }, 409);
       const entry = { id, nick, score, level: lvl, streak: Math.max(0, Math.min(5000, parseInt(streak) || 0)), t: Date.now() };
       if (i >= 0) {
         if (b[i].score >= score) { b[i].nick = nick; }      // اسم جديد فقط، النتيجة لم تتحسن
