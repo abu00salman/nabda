@@ -1,5 +1,5 @@
 // عند كل تحديث: غيّر رقم الإصدار هنا ليطابق APP_VERSION في index.html
-const CACHE = 'nabda-1.1.1';
+const CACHE = 'nabda-1.1.2';
 const FILES = ['./', './index.html', './manifest.json', './icon.svg', './og-image.jpg', './about.html', './privacy.html'];
 self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))));
 self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
