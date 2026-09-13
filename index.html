@@ -341,8 +341,9 @@
    عند كل تحديث: ارفع APP_VERSION، أضف بنودًا في CHANGELOG،
    وغيّر رقم CACHE في sw.js لنفس الرقم.
    ═══════════════════════════════════════════════════════════════ */
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.1.1';
 const CHANGELOG = {
+  '1.1.1': ['إصلاح إرسال النتائج إلى لوحة المتصدرين'],
   '1.1.0': [
     'لوحة المتصدرين العالمية بأسماء مستعارة',
     'ثلاثة أشكال للعبة: ليمون، محيط، جمر',
@@ -356,7 +357,7 @@ const CHANGELOG = {
    'https://api.playnabda.com'  أو  'https://nabda-board.<اسمك>.workers.dev'
    إن تُرك فارغًا تعمل اللعبة بلوحة محلية على هذا الجهاز فقط.
    ═══════════════════════════════════════════════════════════════ */
-const API_BASE = 'https://nabda.abu00salman-r.workers.dev';
+const API_BASE = '';
 
 /* ───────── الإعدادات ───────── */
 const CFG = { baseSpeed:130, speedStep:14, maxSpeed:340, baseArc:30, arcStep:2.6, minArc:9, hitsPerLevel:5, lives:3, missMargin:22, reverseFromLevel:3 };
@@ -480,7 +481,7 @@ function miss(d){
 function gameOver(){
   S.over = true; S.running = false; setStatus('انتهت الجولة', true);
   const record = S.score > best;
-  if (record) { best = S.score; store.set('nabda_best', String(best)); }
+  if (record) { best = S.score; store.set('nabda_best', String(best)); store.set('nabda_best_meta', JSON.stringify({ level:S.level, streak:S.bestStreak })); }
   ui.finalScore.textContent = S.score; ui.finalLevel.textContent = S.level; ui.finalStreak.textContent = S.bestStreak; ui.finalBest.textContent = best;
   ui.bestBadge.style.display = record ? 'inline-block' : 'none';
   ui.rankLine.textContent = '';
@@ -600,8 +601,8 @@ async function submitScore(score, level, streak){
     let rank = null;
     if (online) { const r = await api('/score', { method:'POST', body: JSON.stringify(entry) }); rank = r.rank; }
     else { localSave(entry); rank = localBoard().findIndex(x => x.id === deviceId) + 1 || null; }
-    if (rank) ui.rankLine.textContent = rank <= 20 ? `ترتيبك العالمي: #${rank} 🏆` : `ترتيبك: #${rank} — تابع، القمة قريبة`;
-  } catch(e) { console.warn('leaderboard', e); }
+    if (rank) ui.rankLine.textContent = !online ? `ترتيبك على هذا الجهاز: #${rank}` : rank <= 20 ? `ترتيبك العالمي: #${rank} 🏆` : `ترتيبك: #${rank} — تابع، القمة قريبة`;
+  } catch(e) { console.warn('leaderboard', e); ui.rankLine.textContent = 'تعذّر إرسال النتيجة، ستُرسل في الجولة القادمة'; }
 }
 async function fetchTop(){ return online ? api('/top') : localBoard().slice(0,20); }
 async function myRank(score){
@@ -631,8 +632,8 @@ ui.nickSave.addEventListener('click', async () => {
   const v = ui.nickInput.value.trim(), err = validNick(v);
   if (err) { ui.nickErr.textContent = err; return; }
   nick = v; store.set('nabda_nick', nick); ui.nickOverlay.classList.remove('show');
-  if (pendingScore) { const p = pendingScore; pendingScore = null; await submitScore(p.score, p.level, p.streak); }
-  else if (best > 0) submitScore(best, 1, 0);
+  if (pendingScore) { const p = pendingScore; pendingScore = null; await submitScore(Math.max(p.score, best), Math.max(p.level, Math.ceil(best / 300)), p.streak); }
+  else if (best > 0) { let m = { level:1, streak:0 }; try { m = JSON.parse(store.get('nabda_best_meta')) || m; } catch(e){} submitScore(best, Math.max(m.level, Math.ceil(best / 300)), m.streak); }
   if (ui.boardOverlay.classList.contains('show')) openBoard();
 });
 ui.nickInput.addEventListener('keydown', e => { if (e.key === 'Enter') ui.nickSave.click(); });
