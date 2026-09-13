@@ -24,6 +24,7 @@ export default {
     const json = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: cors });
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
 
+    try {
     const url = new URL(req.url);
     const board = async () => (await env.BOARD.get('board', 'json')) || [];
 
@@ -48,10 +49,11 @@ export default {
       if (!NICK_RE.test(nick || '')) return json({ error: 'bad nick' }, 400);
       if (!Number.isInteger(score) || score < 0 || score > MAX_SCORE) return json({ error: 'bad score' }, 400);
 
-      // حد معدل بسيط: كتابة واحدة كل 3 ثوانٍ لكل IP
+      // حد معدل بسيط: كتابة واحدة كل 3 ثوانٍ لكل IP (أقل TTL يقبله KV هو 60 ثانية، لذلك نخزّن وقت آخر كتابة)
       const ip = req.headers.get('CF-Connecting-IP') || 'x';
-      if (await env.BOARD.get('rl:' + ip)) return json({ error: 'slow down' }, 429);
-      await env.BOARD.put('rl:' + ip, '1', { expirationTtl: 3 });
+      const last = parseInt(await env.BOARD.get('rl:' + ip) || '0', 10);
+      if (Date.now() - last < 3000) return json({ error: 'slow down' }, 429);
+      await env.BOARD.put('rl:' + ip, String(Date.now()), { expirationTtl: 60 });
 
       // منطقية النتيجة مقابل المستوى: كل مستوى = 5 إصابات، والإصابة القصوى ≈ 55 نقطة مع المضاعف
       const lvl = Math.max(1, Math.min(200, parseInt(level) || 1));
@@ -72,5 +74,8 @@ export default {
     }
 
     return json({ error: 'not found' }, 404);
+    } catch (e) {
+      return json({ error: 'server: ' + (e && e.message ? e.message : String(e)) }, 500);
+    }
   },
 };
