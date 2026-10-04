@@ -1,0 +1,42 @@
+name: Build PlayNabda APK
+
+# Builds the Android app in android-app/ on GitHub's own runners, which have a full
+# Android SDK + internet access (unlike the sandbox this workflow was authored from,
+# which has no SDK at all — see android-app/README.md). Runs on every push that
+# touches android-app/, and can also be triggered manually from the Actions tab.
+on:
+  push:
+    branches: [main]
+    paths: ["android-app/**", ".github/workflows/android-build.yml"]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Grant execute permission to gradlew
+        run: chmod +x gradlew
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: PlayNabda-debug-apk
+          path: android-app/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
