@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Nabda's own data (best score, nickname, theme, leaderboard device id) lives in the
+     WebView's localStorage, not Android's app-private storage — whether that transfers
+     to a new device on its own is the user's call, not something to force either way
+     via a silent backup. Excluding everything is the conservative default. -->
+<data-extraction-rules>
+    <cloud-backup disableIfNoEncryptionCapability="true">
+        <exclude domain="root" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="root" />
+    </device-transfer>
+</data-extraction-rules>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The site's own mark (icon.svg): a ring track, a bright accent arc, and a light
+     dot where the arc ends — redrawn here as vector paths, scaled and centered so the
+     whole mark sits inside the adaptive-icon safe zone (roughly the inner 66dp circle
+     of this 108dp canvas), since OEM launchers crop this foreground to shapes that
+     vary (circle, squircle, rounded square) and anything near the edge gets clipped
+     on some of them. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- ring track -->
+    <path
+        android:pathData="M54,31.5 A22.5,22.5 0 1,1 54,76.5 A22.5,22.5 0 1,1 54,31.5 Z"
+        android:strokeColor="#243141"
+        android:strokeWidth="4.2"
+        android:fillColor="#00000000" />
+    <!-- accent arc (quarter turn, matches icon.svg's path exactly, just rescaled) -->
+    <path
+        android:pathData="M54,31.5 A22.5,22.5 0 0,1 76.5,54"
+        android:strokeColor="#D6FF5A"
+        android:strokeWidth="6.6"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+    <!-- light dot at the arc's leading edge -->
+    <path
+        android:pathData="M54,26.4 A5.1,5.1 0 1,1 54,36.6 A5.1,5.1 0 1,1 54,26.4 Z"
+        android:fillColor="#EAF4FF" />
+</vector>

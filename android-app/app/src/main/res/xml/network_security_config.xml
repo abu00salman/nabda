@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Release policy: HTTPS only, system trust anchors only (no bundled/user CA trust,
+     so a device with a malicious user-installed CA can't MITM the app). The debug
+     build type overlays a second copy of this file (src/debug/res/xml) that adds a
+     cleartext exception for localhost/10.0.2.2 only, for pointing a debug build at a
+     local dev server. That override never ships in release. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

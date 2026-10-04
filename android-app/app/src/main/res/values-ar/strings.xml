@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- الاسم يبقى PlayNabda بالإنجليزية كما طُلب صراحةً، بينما تُترجم بقية النصوص. -->
+    <string name="app_name">PlayNabda</string>
+
+    <string name="error_title">تعذّر الوصول إلى نبضة</string>
+    <string name="error_body">لا يوجد اتصال بالإنترنت، ولا شيء محفوظ بعد للعمل دون اتصال. اتصل بالإنترنت مرة واحدة لتحميل اللعبة، وبعدها تستمر بالعمل دون اتصال.</string>
+    <string name="error_retry">إعادة المحاولة</string>
+
+    <string name="http_error_title">حدث خطأ ما</string>
+    <string name="http_error_body">لم يتم تحميل نبضة بشكل صحيح. هذا غالبًا مؤقت.</string>
+</resources>

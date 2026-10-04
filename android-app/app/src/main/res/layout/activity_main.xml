@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A plain FrameLayout: every child here is either "fill the whole screen" or
+     "center within it", which FrameLayout already does by stacking children in
+     declaration order (later = drawn on top) — no ConstraintLayout dependency needed. -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/nabda_bg">
+
+    <!-- The WebView fills the window edge-to-edge; the page handles its own safe-area
+         insets via CSS 100dvh + env(safe-area-inset-*) (already wired in index.html),
+         fed by the real system bar/cutout insets once edge-to-edge is enabled. -->
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Shown only while the splash screen's own keep-on-screen condition is still
+         true, as a safety net in case the page takes a moment past the splash's own
+         timeout. -->
+    <ProgressBar
+        android:id="@+id/loadingSpinner"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/nabda_muted"
+        android:visibility="gone" />
+
+    <!-- Native-level error screen: covers the WebView only when the TOP-LEVEL
+         navigation itself failed (no network before the service worker ever cached
+         anything, or a non-2xx on the initial load). Anything that fails after the
+         page is already running has no equivalent here — this view never appears
+         once the page has loaded successfully once. -->
+    <LinearLayout
+        android:id="@+id/errorOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingHorizontal="32dp"
+        android:background="@color/nabda_bg"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/errorTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/nabda_text"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            tools:text="@string/error_title" />
+
+        <TextView
+            android:id="@+id/errorBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/nabda_muted"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:text="@string/error_body" />
+
+        <Button
+            android:id="@+id/errorRetryButton"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/error_retry" />
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Matches playnabda.com's own "nebula" dark palette exactly (index.html's
+         :root/[data-mode="dark"] CSS variables) rather than a generic Material
+         palette, so the native chrome (splash, status bar, error screen) never
+         flashes a mismatched color against the web UI it wraps. -->
+    <color name="nabda_bg">#070A1A</color>
+    <color name="nabda_text">#F3F6FD</color>
+    <color name="nabda_muted">#8C9AC0</color>
+    <color name="nabda_accent">#3DE8FF</color>
+</resources>

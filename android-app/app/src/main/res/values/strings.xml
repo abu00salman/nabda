@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PlayNabda</string>
+
+    <string name="error_title">Can\'t reach Nabda</string>
+    <string name="error_body">No internet connection, and nothing is cached yet for offline use. Connect once to load the app, then it keeps working offline.</string>
+    <string name="error_retry">Retry</string>
+
+    <string name="http_error_title">Something went wrong</string>
+    <string name="http_error_body">Nabda didn\'t load correctly. This is usually temporary.</string>
+</resources>

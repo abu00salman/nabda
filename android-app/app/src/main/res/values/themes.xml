@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- The page itself can switch between dark/light mode (Settings sheet), but the
+         native splash/status-bar chrome needs one fixed identity for the brief moment
+         before any page content is visible — dark is Nabda's brand default, matching
+         [data-mode="dark"] in index.html (the default for anyone without a saved
+         preference yet). -->
+    <style name="Theme.PlayNabda" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowBackground">@color/nabda_bg</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="28">shortEdges</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+    </style>
+
+    <!-- The launch theme: androidx.core.splashscreen draws this for the brief moment
+         between process start and the first WebView frame, then MainActivity switches
+         to Theme.PlayNabda via postSplashScreenTheme. No custom splash Activity, no
+         artificial delay — the system splash API exits as soon as content is ready. -->
+    <style name="Theme.PlayNabda.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/nabda_bg</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.PlayNabda</item>
+    </style>
+
+</resources>
