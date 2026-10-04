@@ -61,9 +61,9 @@ export default {
       if (Date.now() - last < 3000) return json({ error: 'slow down' }, 429);
       await env.BOARD.put('rl:' + ip, String(Date.now()), { expirationTtl: 60 });
 
-      // منطقية النتيجة مقابل المستوى: كل مستوى = 5 إصابات، والإصابة القصوى ≈ 55 نقطة مع المضاعف
+      // منطقية النتيجة مقابل المستوى (نبضة 2.0): كل مستوى ≈ 9 إصابات، والإصابة القصوى 100 نقطة × مضاعف سلسلة حتى x2
       const lvl = Math.max(1, Math.min(200, parseInt(level) || 1));
-      if (score > lvl * 5 * 60 + 300) return json({ error: 'implausible' }, 400);
+      if (score > lvl * 9 * 220 + 800) return json({ error: 'implausible' }, 400);
 
       let b = await board();
       const i = b.findIndex(x => x.id === id);
