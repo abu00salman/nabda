@@ -10,6 +10,9 @@ on:
     paths: ["android-app/**", ".github/workflows/android-build.yml"]
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -45,3 +48,22 @@ jobs:
           name: PlayNabda-debug-apk
           path: android-app/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+      # Workflow artifacts (actions/upload-artifact above) are served from Azure Blob
+      # Storage, which some network environments block outright — including the one
+      # this workflow itself was authored from. Also publish the APK as a plain git
+      # object on its own orphan branch, downloadable with nothing but `git fetch`
+      # against github.com, which is reachable everywhere upload-artifact isn't.
+      - name: Publish APK to the apk-builds branch
+        working-directory: .
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p /tmp/apk-out
+          cp android-app/app/build/outputs/apk/debug/app-debug.apk /tmp/apk-out/PlayNabda-debug.apk
+          git checkout --orphan apk-builds
+          git rm -rf . > /dev/null
+          cp /tmp/apk-out/PlayNabda-debug.apk .
+          git add PlayNabda-debug.apk
+          git commit -m "PlayNabda debug APK — built from ${{ github.sha }}"
+          git push --force origin apk-builds
