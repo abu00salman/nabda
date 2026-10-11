@@ -36,3 +36,9 @@ This needs an Apple Developer account (paid, US$99 per year) and signing:
 3. Install through TestFlight, or submit for App Store review.
 
 Nothing in this repo contains signing certificates or Apple credentials.
+
+## Unsigned IPA (no Apple account needed)
+
+CI (`ios-build.yml`) also builds `Nabda-unsigned.ipa` and uploads it as an artifact. It
+is not signed, so iOS won't install it as is. Re-sign it with your own Apple ID using a
+sideloading tool such as Sideloadly or AltStore, then install it on your iPhone.
