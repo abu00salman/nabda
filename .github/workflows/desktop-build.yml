@@ -1,0 +1,52 @@
+name: Build Nabda desktop apps
+
+# Builds the Windows installer (.exe) and the macOS disk image (.dmg + .zip) from
+# desktop-app/. Each runs on its own GitHub runner, because Electron Builder can only
+# produce the Windows and macOS packages natively on those systems. Runs on pushes that
+# touch desktop-app/ and can be started by hand from the Actions tab.
+on:
+  push:
+    branches: [main]
+    paths: ["desktop-app/**", ".github/workflows/desktop-build.yml"]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            script: dist:win
+            files: |
+              desktop-app/dist/*.exe
+          - os: macos-latest
+            script: dist:mac
+            files: |
+              desktop-app/dist/*.dmg
+              desktop-app/dist/*.zip
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: desktop-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: desktop-app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build installer
+        run: npm run ${{ matrix.script }}
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: nabda-desktop-${{ matrix.os }}
+          path: ${{ matrix.files }}
+          if-no-files-found: error

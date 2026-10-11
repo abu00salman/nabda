@@ -1,0 +1,34 @@
+# Generates Nabda.xcodeproj from this file (XcodeGen: `brew install xcodegen && xcodegen generate`).
+# Keeping the project as text means it can be reviewed and rebuilt on any Mac, and the
+# CI workflow regenerates it on every build instead of trusting a checked-in .xcodeproj.
+name: Nabda
+options:
+  bundleIdPrefix: com.playnabda
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "2.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+targets:
+  Nabda:
+    type: application
+    platform: iOS
+    sources:
+      - path: Nabda
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.playnabda.app
+        PRODUCT_NAME: Nabda
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1,2"
+        INFOPLIST_KEY_CFBundleDisplayName: نبضة
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_BackgroundColor: LaunchBackground
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
+        GENERATE_INFOPLIST_FILE: YES
