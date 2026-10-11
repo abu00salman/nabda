@@ -1,0 +1,144 @@
+name: Release Nabda
+
+# Builds every platform and attaches the results to one GitHub Release.
+# Runs when a version tag (v*) is pushed, or by hand from the Actions tab
+# (enter an existing tag, e.g. v2.0.0, in the "tag" input).
+#
+# Everything here is UNSIGNED:
+#   - Android: debug APK (install it after allowing "Install unknown apps").
+#   - Windows: NSIS .exe (SmartScreen warns on first run).
+#   - macOS:   .dmg and .zip (Gatekeeper: right-click, Open).
+#   - iPhone:  unsigned .ipa, which must be re-signed (e.g. Sideloadly) to install.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to build and release, e.g. v2.0.0"
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  # The tag this run releases: from the pushed tag, or from the manual input.
+  RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android-app
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses > /dev/null || true
+      - run: chmod +x gradlew
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --no-daemon
+      - name: Rename APK
+        run: cp app/build/outputs/apk/debug/app-debug.apk "$RUNNER_TEMP/Nabda-${RELEASE_TAG}-android-debug.apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: ${{ runner.temp }}/Nabda-${{ env.RELEASE_TAG }}-android-debug.apk
+          if-no-files-found: error
+
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            script: dist:win
+            files: desktop-app/dist/*.exe
+          - os: macos-latest
+            script: dist:mac
+            files: |
+              desktop-app/dist/*.dmg
+              desktop-app/dist/*.zip
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: desktop-app
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: desktop-app/package-lock.json
+      - run: npm ci
+      - run: npm run ${{ matrix.script }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ matrix.os }}
+          path: ${{ matrix.files }}
+          if-no-files-found: error
+
+  ios:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ios-app
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - run: brew install xcodegen
+      - run: xcodegen generate
+      - name: Build unsigned app for iPhone
+        run: |
+          xcodebuild build \
+            -project Nabda.xcodeproj \
+            -scheme Nabda \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Package unsigned IPA
+        run: |
+          APP=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name "Nabda.app" -type d)
+          mkdir -p Payload
+          cp -R "$APP" Payload/
+          zip -qr "$RUNNER_TEMP/Nabda-${RELEASE_TAG}-iphone-unsigned.ipa" Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios
+          path: ${{ runner.temp }}/Nabda-${{ env.RELEASE_TAG }}-iphone-unsigned.ipa
+          if-no-files-found: error
+
+  publish:
+    needs: [android, desktop, ios]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-files
+          merge-multiple: true
+      - name: List release files
+        run: ls -la release-files
+      - name: Create or update GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" release-files/* --clobber
+          else
+            gh release create "$RELEASE_TAG" release-files/* \
+              --title "Nabda $RELEASE_TAG" \
+              --target "$GITHUB_SHA" \
+              --prerelease \
+              --notes "Unsigned builds for Android, Windows, macOS and iPhone. See the README in each platform folder for installation steps."
+          fi
