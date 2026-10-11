@@ -1,0 +1,37 @@
+name: Build Nabda iOS app
+
+# Compiles the iPhone app in ios-app/ on a macOS runner. Xcode exists only on macOS, so
+# this is the only place the Swift code is built. It targets the iOS Simulator SDK and
+# turns code signing off, so no Apple certificates are needed for this check.
+#
+# Installing on a real iPhone or submitting to TestFlight needs an Apple Developer
+# account and signing. That is a separate step and is not done by this workflow.
+on:
+  push:
+    branches: [main]
+    paths: ["ios-app/**", ".github/workflows/ios-build.yml"]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ios-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build for iOS Simulator
+        run: |
+          xcodebuild build \
+            -project Nabda.xcodeproj \
+            -scheme Nabda \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
