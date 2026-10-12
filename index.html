@@ -77,7 +77,7 @@
     --bg:#070A1A; --bg2:#15123A; --bg3:#1D0F30;
     --panel-a:rgba(255,255,255,.06); --panel-b:rgba(255,255,255,.015);
     --line:rgba(255,255,255,.1); --tick:rgba(255,255,255,.08); --tick-major:rgba(255,255,255,.2); --ring:rgba(255,255,255,.1);
-    --text:#F3F6FD; --muted:#8C9AC0; --dot:#FFFFFF;
+    --text:#F3F6FD; --muted:#A9B6D9; --dot:#FFFFFF;
     --scrim:rgba(4,6,14,.82);
   }
   [data-mode="light"]{
@@ -112,7 +112,7 @@
   .topbar{display:flex;align-items:center;justify-content:space-between;gap:8px}
   .lvl-chip{display:flex;align-items:center;gap:7px;border-radius:999px;padding:9px 16px 9px 14px;font-weight:700;font-size:14.5px}
   .lvl-chip .tier{color:var(--muted);font-weight:600;font-size:12px;margin-right:4px}
-  .icon-btn{width:42px;height:42px;border-radius:14px;border:0;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--text);cursor:pointer}
+  .icon-btn{width:44px;height:44px;border-radius:14px;border:0;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--text);cursor:pointer}
   .icon-btn:active{transform:scale(.94)}
   .icon-row{display:flex;gap:8px}
 
@@ -139,7 +139,7 @@
   canvas{display:block;width:100%;height:100%;position:absolute;inset:0}
   .ring-tap{position:absolute;inset:-12px;border:0;background:transparent;cursor:pointer;padding:0;touch-action:none}
   .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;pointer-events:none;text-align:center}
-  .center .hint{font-size:14px;opacity:.75;color:var(--muted)}
+  .center .hint{font-size:14px;line-height:1.6;max-width:66%;opacity:.9;color:var(--muted)}
   .countdown{font-size:62px;font-weight:800;color:var(--accent);text-shadow:0 0 30px rgba(var(--accent-rgb),.5);animation:cdPop .55s cubic-bezier(.2,.8,.2,1)}
   @keyframes cdPop{0%{opacity:0;transform:scale(.4)}40%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
   .popfeed{font-size:30px;font-weight:800;opacity:0;line-height:1.15;text-align:center}
@@ -148,6 +148,7 @@
   .popfeed.perfect{color:var(--accent-core);text-shadow:0 0 22px rgba(var(--accent-rgb),.8)}
   .popfeed.great{color:var(--accent);text-shadow:0 0 16px rgba(var(--accent-rgb),.5)}
   .popfeed.good{color:#9FC4FF;text-shadow:0 0 12px rgba(var(--good-rgb),.4)}
+  .popfeed.msg{font-size:21px;white-space:nowrap}
   .popfeed.miss{color:#FF93AE;text-shadow:0 0 12px rgba(var(--danger-rgb),.4)}
   @keyframes popfeed{0%{opacity:0;transform:scale(.6) translateY(6px)}30%{opacity:1;transform:scale(1.08) translateY(0)}100%{opacity:0;transform:scale(1) translateY(-10px)}}
   .milestone{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;font-size:22px;font-weight:800;color:var(--accent);opacity:0}
@@ -343,7 +344,7 @@
     <ul class="rules">
       <li><i>◎</i><span>اضغط في أي مكان على الدائرة عندما يقترب الضوء من المنطقة المضيئة</span></li>
       <li><i>🎯</i><span>كل ما كانت الإصابة أقرب لمنتصف المنطقة، كانت النقاط أعلى: مثالي، رائع، أو جيد</span></li>
-      <li><i>🛡️</i><span>هناك منطقة سماح حول الهدف، لن تخسر قلبًا إلا إذا تأخرت كثيرًا أو ضغطت بعيدًا جدًا</span></li>
+      <li><i>🛡️</i><span>تجاوز المنطقة دون ضغط لا يُحسب خطأ ولا يُنقص قلبًا. القلب يُنقص فقط إذا ضغطت والكرة خارج الأزرق والأبيض</span></li>
       <li><i>♥</i><span>لديك ٥ فرص، والهدف ينتقل لموقع جديد بعد كل إصابة</span></li>
       <li><i>⚡</i><span>السلسلة تمنحك مضاعف نقاط يرتفع كل ١٠ إصابات متتالية</span></li>
     </ul>
@@ -451,8 +452,13 @@
 /* ═══════════════════════════════════════════════════════════════
    إعدادات النسخة وسجل التغييرات
    ═══════════════════════════════════════════════════════════════ */
-const APP_VERSION = '2.1.0';
+const APP_VERSION = '2.1.1';
 const CHANGELOG = {
+  '2.1.1': [
+    'الكرة تستمر بالدوران إذا لم تضغط: تجاوز الهدف دون ضغط لا يُنقص قلبًا ولا يكسر السلسلة',
+    'الضغط داخل الأزرق نجاح، وداخل الأبيض مثالي، والضغط خارجهما فقط يُنقص قلبًا',
+    'إصلاح الخسارة العشوائية وإصلاح تسجيل اللمسة مرتين، وتحسين الشاشة على الآيفون',
+  ],
   '2.1.0': [
     'تصميم جديد مستوحى من فضاء نبضة: رقائق زجاجية وخلفية سديمية',
     'وضع ليلي ونهاري قابل للتبديل من الإعدادات',
@@ -485,8 +491,8 @@ const GAME_CONFIG = {
   arcStep: 9,
   difficultyEveryHits: 9, // ترفع الصعوبة كل ٨-١٠ إصابات صحيحة تقريبًا
   perfectRatio: .32,      // نسبة منطقة PERFECT من نصف عرض القوس
-  goodGraceDeg: 16,       // منطقة GOOD (Grace) الإضافية خارج القوس الرئيسي، على كل جانب
-  missBufferDeg: 15,      // سماح إضافي قبل اعتبار تجاوز الهدف Miss تلقائيًا
+  goodGraceDeg: 6,        // تسامح صغير عند حواف القوس الأزرق (يُحسب «جيد»)، على كل جانب
+  tapDebounceMs: 80,      // أقل فاصل بين لمستين؛ يمنع احتساب اللمسة الواحدة مرتين
   recoverySpeedFactor: .85, // تخفيف مؤقت للسرعة بعد خسارة قلب
   recoveryHits: 3,          // عدد الإصابات التي يستمر فيها التخفيف
   scorePerfect: 100,
@@ -547,6 +553,7 @@ ui.themes.querySelectorAll('.theme').forEach(b => {
 });
 let C = {};
 // قيم احتياطية: إن لم يُقرأ متغيّر CSS (أو جاء فارغًا) لا تُرسم الحلقة بلون غير صالح فتظهر سوداء أو تختفي
+const HINT_PLAY = 'اضغط عندما تصل الكرة إلى الأزرق أو الأبيض';
 const COLOR_FALLBACK = { tick:'rgba(255,255,255,.08)', tickMajor:'rgba(255,255,255,.2)', ring:'rgba(255,255,255,.1)', accent:'#3DE8FF', accentCore:'#E3FFFD', accentRgb:'61,232,255', accent2:'#9B6BFF', dot:'#FFFFFF', dangerRgb:'255,92,138', goodRgb:'120,170,255' };
 function readColors(){
   const s = getComputedStyle(document.documentElement);
@@ -640,7 +647,7 @@ const HitDetector = {
 /* ───────── حالة اللعبة ───────── */
 const S = {
   running:false, paused:false, over:false, countingDown:false, tutorial:false,
-  angle:-90, dir:1, speed:GAME_CONFIG.startingSpeed, target:90, arc:GAME_CONFIG.startingArc, passed:false,
+  angle:-90, dir:1, speed:GAME_CONFIG.startingSpeed, target:90, arc:GAME_CONFIG.startingArc,
   score:0, combo:0, bestCombo:0, hits:0, level:1, lives:GAME_CONFIG.startingLives,
   perfectCount:0, greatCount:0, goodCount:0, missCount:0,
   recoveryLeft:0,
@@ -651,8 +658,8 @@ function newTarget(){
   // الهدف دائمًا بعيد عن موقع الضوء الحالي بمقدار كافٍ (110-240°)، وبما أن الضوء عند
   // الإصابة يكون قريبًا من الهدف السابق، هذا يضمن أيضًا بعده عن الهدف السابق تلقائيًا
   // ويعطي اللاعب وقتًا كافيًا لرؤيته قبل الوصول إليه.
-  S.target = norm(S.angle + S.dir * rand(110, 240));
-  S.passed = false;
+  // أقل من 180° دائمًا: أي هدف أبعد يُقرأ من الفرق الدائري كأنه خلف الكرة مباشرة
+  S.target = norm(S.angle + S.dir * rand(110, 170));
 }
 function applyLevel(){
   const factor = S.recoveryLeft > 0 ? GAME_CONFIG.recoverySpeedFactor : 1;
@@ -678,14 +685,15 @@ function reset(){
   applyLevel(); newTarget();
   ui.score.textContent = '0'; ui.combo.textContent = '0';
   renderHearts();
-  ui.hint.textContent = 'ركّز على الضوء';
+  ui.hint.textContent = HINT_PLAY;
 }
 function pop(el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 
-function showPopFeedback(kind, points){
+function showPopFeedback(kind, points, message){
+  ui.ring.parentElement.querySelectorAll('.popfeed').forEach(old => old.remove());
   const el = document.createElement('div');
-  el.className = 'popfeed ' + kind;
-  const label = kind === 'perfect' ? 'مثالي' : kind === 'great' ? 'رائع' : kind === 'good' ? 'جيد' : 'فاتتك';
+  el.className = 'popfeed ' + kind + (message ? ' msg' : '');
+  const label = message || (kind === 'perfect' ? 'مثالي' : kind === 'great' ? 'رائع' : 'جيد');
   el.innerHTML = points != null ? `${label}<span class="pts">+${points}</span>` : label;
   ui.ring.parentElement.appendChild(el);
   requestAnimationFrame(() => el.classList.add('show'));
@@ -696,6 +704,18 @@ function showMilestone(n){
   ui.milestone.classList.remove('show'); void ui.milestone.offsetWidth; ui.milestone.classList.add('show');
 }
 
+// كل مسارات الإدخال (اللمس، الزر، المفتاح) تمرّ من هنا لمنع الاحتساب المزدوج
+let lastPressAt = -Infinity;
+function handlePress(){
+  const now = performance.now();
+  if (now - lastPressAt < GAME_CONFIG.tapDebounceMs) return;
+  lastPressAt = now;
+  if (S.tutorial) {
+    if (S.running && !S.paused) { const d = Math.abs(diffAngle(S.angle, S.target)); if (HitDetector.classify(d, S.arc) !== 'miss') tutorialHit(); }
+    return;
+  }
+  onTap();
+}
 function onTap(){
   if (!S.running || S.paused || S.over || S.countingDown) return;
   const d = Math.abs(diffAngle(S.angle, S.target));
@@ -720,7 +740,7 @@ function resolveHit(kind){
   if (S.hits % GAME_CONFIG.difficultyEveryHits === 0) {
     S.level++; applyLevel();
     ui.hint.textContent = DifficultyManager.tierName(S.level);
-    setTimeout(() => { if (!S.over) ui.hint.textContent = 'ركّز على الضوء'; }, 1400);
+    setTimeout(() => { if (!S.over) ui.hint.textContent = HINT_PLAY; }, 1400);
     AudioManager.levelUp();
   }
   newTarget();
@@ -731,7 +751,7 @@ function missHit(){
   ui.card.classList.remove('shake'); void ui.card.offsetWidth; ui.card.classList.add('shake');
   renderHearts();
   AudioManager.miss(); HapticManager.buzz([30,40,30]);
-  showPopFeedback('miss', null);
+  showPopFeedback('miss', null, 'ضغطت خارج المنطقة');
   if (S.lives > 0) { S.recoveryLeft = GAME_CONFIG.recoveryHits; applyLevel(); }
   if (S.lives <= 0) return gameOver();
   newTarget();
@@ -744,7 +764,7 @@ function gameOver(){
   const accuracy = totalAttempts ? Math.round((S.perfectCount + S.greatCount + S.goodCount) / totalAttempts * 100) : 0;
   ui.finalScore.textContent = S.score; ui.finalStreak.textContent = '⚡ ' + S.bestCombo; ui.finalAccuracy.textContent = accuracy + '%'; ui.finalBest.textContent = best;
   ui.finalPerfect.textContent = S.perfectCount; ui.finalGreat.textContent = S.greatCount; ui.finalGood.textContent = S.goodCount;
-  ui.endTitle.textContent = record ? 'رقم قياسي جديد!' : 'جولة رائعة!';
+  ui.endTitle.textContent = record ? 'رقم قياسي جديد!' : S.hits === 0 ? 'حاول مرة أخرى' : S.hits >= 10 ? 'جولة رائعة!' : 'انتهت الجولة';
   ui.bestBadge.style.display = record ? 'inline-block' : 'none';
   ui.rankLine.textContent = '';
   setTimeout(() => ui.endOverlay.classList.add('show'), 450);
@@ -764,7 +784,7 @@ function runCountdown(cb){
     setTimeout(() => el.remove(), GAME_CONFIG.countdownStepMs - 20);
     i++;
     if (i < steps.length) setTimeout(showStep, GAME_CONFIG.countdownStepMs);
-    else setTimeout(() => { S.countingDown = false; ui.hint.textContent = 'ركّز على الضوء'; cb && cb(); }, GAME_CONFIG.countdownStepMs);
+    else setTimeout(() => { S.countingDown = false; ui.hint.textContent = HINT_PLAY; cb && cb(); }, GAME_CONFIG.countdownStepMs);
   };
   showStep();
 }
@@ -796,16 +816,8 @@ function start(){
 function pause(){ if (!S.running || S.over || S.countingDown) return; S.paused = true; ui.pauseOverlay.classList.add('show'); }
 function resume(){ S.paused = false; S.last = 0; ui.pauseOverlay.classList.remove('show'); }
 
-ui.ringTap.addEventListener('pointerdown', e => {
-  e.preventDefault();
-  if (S.tutorial) { if (S.running && !S.paused) { const d = Math.abs(diffAngle(S.angle, S.target)); if (HitDetector.classify(d, S.arc) !== 'miss') tutorialHit(); } return; }
-  onTap();
-});
-ui.ringTapBtn.addEventListener('pointerdown', e => {
-  e.preventDefault();
-  if (S.tutorial) { if (S.running && !S.paused) { const d = Math.abs(diffAngle(S.angle, S.target)); if (HitDetector.classify(d, S.arc) !== 'miss') tutorialHit(); } return; }
-  onTap();
-});
+ui.ringTap.addEventListener('pointerdown', e => { e.preventDefault(); handlePress(); });
+ui.ringTapBtn.addEventListener('pointerdown', e => { e.preventDefault(); handlePress(); });
 ui.pauseBtn.addEventListener('click', () => S.paused ? resume() : pause());
 ui.startBtn.addEventListener('click', start);
 ui.retryBtn.addEventListener('click', runRealStart);
@@ -842,7 +854,7 @@ window.addEventListener('keydown', e => {
   if (e.code === 'Space' || e.code === 'Enter') {
     if (ui.startOverlay.classList.contains('show') || ui.endOverlay.classList.contains('show')) { e.preventDefault(); return start(); }
     if (S.paused) { e.preventDefault(); return resume(); }
-    if (!anyOverlay) { e.preventDefault(); onTap(); }
+    if (!anyOverlay) { e.preventDefault(); if (!e.repeat) handlePress(); }
   }
   if (e.code === 'Escape' || e.key === 'p') S.paused ? resume() : pause();
 });
@@ -915,11 +927,9 @@ function loop(ts){
   if (S.running && !S.paused && !S.over && !S.countingDown) {
     const prev = S.angle; S.angle = norm(S.angle + S.dir*S.speed*dt);
     S.trail.push(prev); if (S.trail.length > 9) S.trail.shift();
-    if (!S.tutorial) {
-      const rel = diffAngle(S.angle, S.target) * S.dir;
-      const autoMissAt = S.arc + GAME_CONFIG.goodGraceDeg + GAME_CONFIG.missBufferDeg;
-      if (rel > autoMissAt && rel < 150 && !S.passed) { S.passed = true; missHit(); }
-    }
+    // تجاوز الكرة الهدف دون ضغط: لا خسارة قلب ولا كسر للسلسلة، ينتقل الهدف بصمت
+    const past = diffAngle(S.angle, S.target) * S.dir;
+    if (past > S.arc + GAME_CONFIG.goodGraceDeg) newTarget();
   } else S.trail = [];
   draw();
 }
