@@ -45,8 +45,6 @@ targets:
     platform: watchOS
     sources:
       - path: NabdaWatch
-    info:
-      path: NabdaWatch/Info.plist
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.playnabda.app.watchkitapp
@@ -54,6 +52,7 @@ targets:
         TARGETED_DEVICE_FAMILY: "4"
         SKIP_INSTALL: YES
         GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: NabdaWatch/Info.plist
         # Apple Watch hardware is arm64_32. Building two architectures writes the
         # same executable path twice and fails with "Multiple commands produce".
         ARCHS: arm64_32
