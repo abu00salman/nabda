@@ -1,0 +1,184 @@
+name: Build Nabda watchOS
+
+# Builds the unsigned Apple Watch app and the unsigned iPhone .ipa that contains it.
+# Both run on a macOS runner with Xcode, and both are built for the real device SDKs
+# (not the Simulator). Nothing here is signed.
+#
+# Called by release.yml for a new release. It can also be run by hand: then it adds only
+# these two files to an existing release, and leaves every other file on that release as it is.
+on:
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag to add the watchOS files to, e.g. v2.1.2"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-latest
+    env:
+      TAG_INPUT: ${{ inputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Work out version and file names from the tag
+        run: |
+          if [[ ! "$TAG_INPUT" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Tag must look like v2.1.2, got: $TAG_INPUT"
+            exit 1
+          fi
+          echo "TAG=$TAG_INPUT" >> "$GITHUB_ENV"
+          echo "VERSION=${TAG_INPUT#v}" >> "$GITHUB_ENV"
+          echo "BUILD_NUMBER=$GITHUB_RUN_NUMBER" >> "$GITHUB_ENV"
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: watch-app
+        run: xcodegen generate
+
+      - name: Build watchOS app for device (unsigned)
+        working-directory: watch-app
+        run: |
+          xcodebuild build \
+            -project NabdaWatch.xcodeproj \
+            -scheme NabdaWatch \
+            -configuration Release \
+            -destination 'generic/platform=watchOS' \
+            -derivedDataPath build/watch \
+            MARKETING_VERSION="$VERSION" \
+            CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Verify watch app bundle
+        working-directory: watch-app
+        run: |
+          WATCH_APP=$(find build/watch/Build/Products/Release-watchos -maxdepth 1 -name 'NabdaWatch.app' -type d)
+          test -n "$WATCH_APP"
+          INFO="$WATCH_APP/Info.plist"
+          plutil -lint "$INFO"
+          test "$(plutil -extract CFBundleIdentifier raw "$INFO")" = "com.playnabda.app.watchkitapp"
+          test "$(plutil -extract WKCompanionAppBundleIdentifier raw "$INFO")" = "com.playnabda.app"
+          test "$(plutil -extract WKApplication raw "$INFO")" = "true"
+          test "$(plutil -extract CFBundleShortVersionString raw "$INFO")" = "$VERSION"
+          test -x "$WATCH_APP/NabdaWatch"
+          lipo -info "$WATCH_APP/NabdaWatch"
+          echo "WATCH_APP=$WATCH_APP" >> "$GITHUB_ENV"
+
+      - name: Package watchOS zip
+        run: |
+          STAGE="$RUNNER_TEMP/stage-watch"
+          rm -rf "$STAGE" && mkdir -p "$STAGE"
+          cp -R "$WATCH_APP" "$STAGE/NabdaWatch.app"
+          cp watch-app/README-watch.md "$STAGE/README.md"
+          ZIP="$RUNNER_TEMP/Nabda-${TAG}-watchos-unsigned.zip"
+          (cd "$STAGE" && zip -qry "$ZIP" NabdaWatch.app README.md)
+          unzip -l "$ZIP"
+          unzip -l "$ZIP" | grep -q "NabdaWatch.app/Info.plist"
+          unzip -l "$ZIP" | grep -q "NabdaWatch.app/NabdaWatch$"
+          unzip -l "$ZIP" | grep -q "README.md$"
+          echo "WATCH_ZIP=$ZIP" >> "$GITHUB_ENV"
+
+      - name: Build iPhone app with the watch app embedded (unsigned)
+        working-directory: watch-app
+        run: |
+          xcodebuild build \
+            -project NabdaWatch.xcodeproj \
+            -scheme Nabda \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build/ios \
+            MARKETING_VERSION="$VERSION" \
+            CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Verify iPhone app contains the watch app
+        working-directory: watch-app
+        run: |
+          IOS_APP=$(find build/ios/Build/Products/Release-iphoneos -maxdepth 1 -name 'Nabda.app' -type d)
+          test -n "$IOS_APP"
+          plutil -lint "$IOS_APP/Info.plist"
+          test "$(plutil -extract CFBundleIdentifier raw "$IOS_APP/Info.plist")" = "com.playnabda.app"
+          test -d "$IOS_APP/Watch/NabdaWatch.app"
+          test "$(plutil -extract CFBundleIdentifier raw "$IOS_APP/Watch/NabdaWatch.app/Info.plist")" = "com.playnabda.app.watchkitapp"
+          echo "IOS_APP=$IOS_APP" >> "$GITHUB_ENV"
+
+      - name: Package unsigned iPhone + watch IPA
+        run: |
+          STAGE="$RUNNER_TEMP/stage-ipa"
+          rm -rf "$STAGE" && mkdir -p "$STAGE/Payload"
+          cp -R "$IOS_APP" "$STAGE/Payload/"
+          IPA="$RUNNER_TEMP/Nabda-${TAG}-iphone-watchos-unsigned.ipa"
+          (cd "$STAGE" && zip -qry "$IPA" Payload)
+          unzip -l "$IPA" | grep -q "Payload/Nabda.app/Watch/NabdaWatch.app/Info.plist"
+          unzip -l "$IPA" | grep -q "Payload/Nabda.app/Info.plist"
+          echo "WATCH_IPA=$IPA" >> "$GITHUB_ENV"
+
+      - name: Upload watch zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: watch-zip
+          path: ${{ env.WATCH_ZIP }}
+          if-no-files-found: error
+
+      - name: Upload iPhone + watch IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: watch-ipa
+          path: ${{ env.WATCH_IPA }}
+          if-no-files-found: error
+
+  # Only for a manual run: add the two watch files to the existing release.
+  # A release run does its own publishing in release.yml.
+  publish:
+    needs: build
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: ${{ inputs.tag }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: watch-*
+          path: files
+          merge-multiple: true
+
+      - name: Add watchOS notes and SHA-256 to the release
+        run: |
+          cd files
+          ls -la
+          SECTION=$(mktemp)
+          {
+            echo "## watchOS (Apple Watch Ultra 2)"
+            echo ""
+            echo "Unsigned. These files need signing before installing. See the README inside each file."
+            echo ""
+            for f in *; do echo "- \`$f\` — SHA-256: \`$(shasum -a 256 "$f" | cut -d' ' -f1)\`"; done
+          } > "$SECTION"
+          cd ..
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" files/* --clobber
+            BODY=$(mktemp)
+            gh release view "$TAG" --json body -q .body > "$BODY"
+            if grep -q "^## watchOS" "$BODY"; then
+              # Drop the older watchOS section, then append the fresh one.
+              awk '/^## watchOS/{skip=1} /^## /&&!/^## watchOS/{skip=0} !skip' "$BODY" > "$BODY.clean"
+              mv "$BODY.clean" "$BODY"
+            fi
+            printf '\n%s' "$(cat "$SECTION")" >> "$BODY"
+            gh release edit "$TAG" --notes-file "$BODY"
+          else
+            echo "Release $TAG does not exist. Run the release workflow first." && exit 1
+          fi
