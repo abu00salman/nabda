@@ -73,7 +73,7 @@ jobs:
           test "$(plutil -extract CFBundleShortVersionString raw "$INFO")" = "$VERSION"
           test -x "$WATCH_APP/NabdaWatch"
           lipo -info "$WATCH_APP/NabdaWatch"
-          echo "WATCH_APP=$WATCH_APP" >> "$GITHUB_ENV"
+          echo "WATCH_APP=$(pwd)/$WATCH_APP" >> "$GITHUB_ENV"
 
       - name: Package watchOS zip
         run: |
@@ -111,7 +111,7 @@ jobs:
           test "$(plutil -extract CFBundleIdentifier raw "$IOS_APP/Info.plist")" = "com.playnabda.app"
           test -d "$IOS_APP/Watch/NabdaWatch.app"
           test "$(plutil -extract CFBundleIdentifier raw "$IOS_APP/Watch/NabdaWatch.app/Info.plist")" = "com.playnabda.app.watchkitapp"
-          echo "IOS_APP=$IOS_APP" >> "$GITHUB_ENV"
+          echo "IOS_APP=$(pwd)/$IOS_APP" >> "$GITHUB_ENV"
 
       - name: Package unsigned iPhone + watch IPA
         run: |
