@@ -113,8 +113,15 @@ jobs:
           path: ${{ runner.temp }}/Nabda-${{ env.RELEASE_TAG }}-iphone-unsigned.ipa
           if-no-files-found: error
 
+  # watchOS files come from the reusable workflow. Its artifacts land in this run,
+  # so the publish job below uploads them with everything else.
+  watch:
+    uses: ./.github/workflows/watch-build.yml
+    with:
+      tag: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+
   publish:
-    needs: [android, desktop, ios]
+    needs: [android, desktop, ios, watch]
     runs-on: ubuntu-latest
     steps:
       # gh needs a git checkout to resolve --target, so check out the repo first.
@@ -135,9 +142,23 @@ jobs:
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
             gh release upload "$RELEASE_TAG" release-files/* --clobber
           else
+            NOTES=$(mktemp)
+            {
+              echo "Unsigned builds for Android, Windows, macOS, iPhone and Apple Watch. See the README inside each file for installation steps."
+              echo ""
+              echo "## Files and SHA-256"
+              echo ""
+              cd release-files
+              for f in *; do echo "- \`$f\` — SHA-256: \`$(shasum -a 256 "$f" | cut -d' ' -f1)\`"; done
+              cd ..
+              echo ""
+              echo "## watchOS (Apple Watch Ultra 2)"
+              echo ""
+              echo "Unsigned. Sign before installing. Each watch file has a README inside."
+            } > "$NOTES"
             gh release create "$RELEASE_TAG" release-files/* \
               --title "Nabda $RELEASE_TAG" \
               --target "$GITHUB_SHA" \
               --prerelease \
-              --notes "Unsigned builds for Android, Windows, macOS and iPhone. See the README in each platform folder for installation steps."
+              --notes-file "$NOTES"
           fi
