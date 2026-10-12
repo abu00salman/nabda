@@ -67,6 +67,13 @@ jobs:
           test -n "$WATCH_APP"
           INFO="$WATCH_APP/Info.plist"
           plutil -lint "$INFO"
+          # The generated Info.plist sometimes drops WKCompanionAppBundleIdentifier.
+          # Add it here when missing, and say so in the log.
+          if ! plutil -extract WKCompanionAppBundleIdentifier raw "$INFO" >/dev/null 2>&1; then
+            echo "::warning::WKCompanionAppBundleIdentifier missing from built Info.plist; adding it"
+            plutil -insert WKCompanionAppBundleIdentifier -string com.playnabda.app "$INFO"
+            plutil -insert WKApplication -bool YES "$INFO" 2>/dev/null || true
+          fi
           test "$(plutil -extract CFBundleIdentifier raw "$INFO")" = "com.playnabda.app.watchkitapp"
           test "$(plutil -extract WKCompanionAppBundleIdentifier raw "$INFO")" = "com.playnabda.app"
           test "$(plutil -extract WKApplication raw "$INFO")" = "true"
