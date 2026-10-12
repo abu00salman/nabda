@@ -41,7 +41,7 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
 
   NabdaWatch:
-    type: application.watchapp2
+    type: application
     platform: watchOS
     sources:
       - path: NabdaWatch
